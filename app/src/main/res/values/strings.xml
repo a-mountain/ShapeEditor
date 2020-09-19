@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">ShapeEditor</string>
+    <string name="shape_menu">Об\'єкти</string>
+    <string name="shape_point">Крапка</string>
+    <string name="shape_line">Лінія</string>
+    <string name="shape_rect">Прямокутник</string>
+    <string name="shape_ellipse">Еліпс</string>
+    <string name="info">Довідка</string>
+    <string name="file">Файл</string>
+    <string name="btn_clear">Стерти</string>
+</resources>
