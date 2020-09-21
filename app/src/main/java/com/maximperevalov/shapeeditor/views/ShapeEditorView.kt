@@ -6,12 +6,12 @@ import android.util.AttributeSet
 import android.util.DisplayMetrics
 import android.view.MotionEvent
 import android.view.View
-import com.maximperevalov.shapeeditor.AndroidDrawer
+import com.maximperevalov.shapeeditor.AndroidCanvasDrawer
 import com.maximperevalov.shapeeditor.domain.SelectedShape
 import com.maximperevalov.shapeeditor.domain.ShapeEditor
 
 /**
- * View яке репрезентує редактор фігур
+ * Графічне представлення полотна, для малювання фігури.
  */
 class ShapeEditorView : View {
 
@@ -31,14 +31,15 @@ class ShapeEditorView : View {
 
         bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
-        shapeEditor = ShapeEditor(bitmap.width, bitmap.height, AndroidDrawer(canvas))
 
+        val drawer = AndroidCanvasDrawer(canvas)
+        shapeEditor = ShapeEditor(bitmap.width, bitmap.height, drawer)
     }
 
     override fun onDraw(canvas: Canvas) {
         shapeEditor.draw()
         canvas.save()
-        canvas.drawBitmap(bitmap, 0F, 0F, bitmapPaint);
+        canvas.drawBitmap(bitmap, 0F, 0F, bitmapPaint)
         canvas.restore()
     }
 

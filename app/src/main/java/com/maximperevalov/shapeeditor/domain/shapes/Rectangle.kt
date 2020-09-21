@@ -1,11 +1,14 @@
 package com.maximperevalov.shapeeditor.domain.shapes
 
 import com.maximperevalov.shapeeditor.domain.Drawer
-import com.maximperevalov.shapeeditor.domain.styles.RectangleStyle
 import com.maximperevalov.shapeeditor.domain.Shape
+import com.maximperevalov.shapeeditor.domain.shapes.styles.Style
 
+/**
+ *  Репрезентує - прямокутник
+ */
 class Rectangle(
-    var x: Float, var y: Float, var width: Float, var height: Float, var style: RectangleStyle,
+    var x: Float, var y: Float, var width: Float, var height: Float, var style: Style,
 ) : Shape {
 
     override fun draw(drawer: Drawer) {

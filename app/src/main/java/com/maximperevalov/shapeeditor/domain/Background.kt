@@ -1,10 +1,13 @@
 package com.maximperevalov.shapeeditor.domain
 
 import com.maximperevalov.shapeeditor.domain.shapes.Rectangle
-import com.maximperevalov.shapeeditor.domain.styles.RectangleStyle
+import com.maximperevalov.shapeeditor.domain.shapes.styles.Style
 
 private val DEFAULT_BACKGROUND_COLOR = Color.WHITE
 
+/**
+ * Репрезентує - задній фон редактора
+ */
 class Background(width: Int, height: Int) {
 
     private val backgroundRect = Rectangle(
@@ -12,13 +15,13 @@ class Background(width: Int, height: Int) {
         0F,
         width.toFloat(),
         height.toFloat(),
-        RectangleStyle(color = DEFAULT_BACKGROUND_COLOR)
+        Style(fillColor = DEFAULT_BACKGROUND_COLOR, stroke = null)
     )
 
     var color: Color
-        get() = backgroundRect.style.color
+        get() = backgroundRect.style.fillColor!!
         set(value) {
-            backgroundRect.style.color = value
+            backgroundRect.style.fillColor = value
         }
 
     val height

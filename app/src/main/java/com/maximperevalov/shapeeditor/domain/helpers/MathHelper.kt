@@ -1,15 +1,10 @@
 package com.maximperevalov.shapeeditor.domain.helpers
 
-import kotlin.math.pow
 import kotlin.math.sqrt
 
 /**
- * рахує відстань між двома точками
+ * Допоміжний клас, як домогає з розрахунками, які стосуються точок і векторів.
  */
-fun distance(x1: Float, y1: Float, x2: Float, y2: Float): Float {
-    return sqrt((y2 - y1).pow(2) + (x2 - x1).pow(2))
-}
-
 data class PointMath(val x: Float, val y: Float) {
 
     fun magnitude() = sqrt(x * x + y * y)
@@ -24,10 +19,10 @@ data class PointMath(val x: Float, val y: Float) {
         pointMath.y + (this.y - pointMath.y) / 2.0F
     )
 
-    fun distance(pointMath: PointMath): Double {
+    fun distance(pointMath: PointMath): Float {
         val a = this.x - pointMath.x
         val b = this.y - pointMath.y
-        return sqrt(a * a + b * b.toDouble())
+        return sqrt(a * a + b * b)
     }
 
     operator fun plus(increment: PointMath) = PointMath(this.x + increment.x, this.y + increment.y)

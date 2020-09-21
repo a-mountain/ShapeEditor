@@ -6,7 +6,7 @@ val DEFAULT_SELECTION_COLOR = Color.BLACK
  *  ShapeCreatingHandler - керує процесом малювання фігури
  */
 
-interface ShapeCreatingHandler {
+interface ShapeDrawingHandler {
 
     fun onFirstTouch(firstX: Float, firstY: Float)
 

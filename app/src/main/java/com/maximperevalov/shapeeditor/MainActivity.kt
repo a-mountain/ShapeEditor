@@ -10,7 +10,7 @@ import com.maximperevalov.shapeeditor.domain.SelectedShape
 import com.maximperevalov.shapeeditor.views.ShapeEditorView
 
 /**
- * Головне вікно
+ * Головне вікно додатку
  */
 class MainActivity : AppCompatActivity() {
 

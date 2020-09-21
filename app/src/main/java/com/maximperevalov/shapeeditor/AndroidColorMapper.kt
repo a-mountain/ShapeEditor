@@ -1,4 +1,4 @@
-package com.maximperevalov.shapeeditor.mappers
+package com.maximperevalov.shapeeditor
 
 import com.maximperevalov.shapeeditor.domain.Color
 

@@ -5,13 +5,13 @@ private val DEFAULT_SELECTED_SHAPE = SelectedShape.ELLIPSE
 /**
  * Головний клас, який репрезентує редактор фігур.
  */
-class ShapeEditor(width: Int, height: Int, private val drawer: Drawer): ShapeCreatingHandler {
+class ShapeEditor(width: Int, height: Int, private val drawer: Drawer): ShapeDrawingHandler {
 
     private val shapes = ArrayList<Shape>()
 
-    private val shapeCreatingHandlerFactory = ShapeCreatingHandlerFactory(shapes)
-    private var shapeCreatingHandler: ShapeCreatingHandler =
-        shapeCreatingHandlerFactory.getShapeCreatingHandler(DEFAULT_SELECTED_SHAPE)
+    private val shapeDrawingHandlerFactory = ShapeDrawingHandlerFactory(shapes)
+    private var shapeDrawingHandler: ShapeDrawingHandler =
+        shapeDrawingHandlerFactory.getShapeDrawingHandler(DEFAULT_SELECTED_SHAPE)
 
     val background = Background(width, height)
 
@@ -26,7 +26,7 @@ class ShapeEditor(width: Int, height: Int, private val drawer: Drawer): ShapeCre
     }
 
     fun selectShape(selectedShape: SelectedShape) {
-        shapeCreatingHandler = shapeCreatingHandlerFactory.getShapeCreatingHandler(selectedShape)
+        shapeDrawingHandler = shapeDrawingHandlerFactory.getShapeDrawingHandler(selectedShape)
     }
 
     fun draw() {
@@ -35,15 +35,15 @@ class ShapeEditor(width: Int, height: Int, private val drawer: Drawer): ShapeCre
     }
 
     override fun onFirstTouch(firstX: Float, firstY: Float) {
-        shapeCreatingHandler.onFirstTouch(firstX, firstY)
+        shapeDrawingHandler.onFirstTouch(firstX, firstY)
     }
 
     override fun onMove(newX: Float, newY: Float) {
-        shapeCreatingHandler.onMove(newX, newY)
+        shapeDrawingHandler.onMove(newX, newY)
     }
 
     override fun onLastTouch(lastX: Float, lastY: Float) {
-        shapeCreatingHandler.onLastTouch(lastX, lastY)
+        shapeDrawingHandler.onLastTouch(lastX, lastY)
     }
 
     private fun drawBackground() {
