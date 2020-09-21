@@ -60,6 +60,10 @@ class MainActivity : AppCompatActivity() {
         shapeEditorView.init(getMetrics())
     }
 
+    /**
+     * Якщо натиснути один раз, то стереться останній об'ект,
+     * якщо натиснути і тримати, то зітруться всі об'екти.
+     */
     private fun initClearButton() {
         btnClear = findViewById(R.id.btn_clear)
         btnClear.apply {
