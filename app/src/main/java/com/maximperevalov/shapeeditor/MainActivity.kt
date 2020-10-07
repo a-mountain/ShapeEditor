@@ -2,11 +2,14 @@ package com.maximperevalov.shapeeditor
 
 import android.os.Bundle
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.Menu
 import android.widget.Button
 import android.widget.PopupMenu
 import androidx.appcompat.app.AppCompatActivity
+import com.maximperevalov.shapeeditor.domain.Color
 import com.maximperevalov.shapeeditor.domain.SelectedShape
+import com.maximperevalov.shapeeditor.fragments.ColorPickerDialogFragment
 import com.maximperevalov.shapeeditor.views.ShapeEditorView
 
 /**
@@ -17,7 +20,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var shapeEditorView: ShapeEditorView
     private lateinit var btnShapes: Button
     private lateinit var btnClear: Button
+    private lateinit var btnColorPicker: Button
     private lateinit var popupMenu: PopupMenu
+    private lateinit var colorPickerDialog: ColorPickerDialogFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,7 +30,15 @@ class MainActivity : AppCompatActivity() {
         initEditorView()
         initClearButton()
         initShapeButton()
+        initColorPickerButton()
         initPopupMenu()
+        initColorPickerDialog()
+    }
+
+    private fun initColorPickerDialog() {
+        colorPickerDialog = ColorPickerDialogFragment(selectedColor = Color.PINK) {
+            Log.i("ColorPicker", it.toString())
+        }
     }
 
     private fun initPopupMenu() {
@@ -64,9 +77,17 @@ class MainActivity : AppCompatActivity() {
      * Якщо натиснути один раз, то стереться останній об'ект,
      * якщо натиснути і тримати, то зітруться всі об'екти.
      */
+
+    private fun initColorPickerButton() {
+        btnColorPicker = findViewById<Button>(R.id.btn_color_picker).apply {
+            setOnClickListener {
+                colorPickerDialog.show(supportFragmentManager, "colorPicker")
+            }
+        }
+    }
+
     private fun initClearButton() {
-        btnClear = findViewById(R.id.btn_clear)
-        btnClear.apply {
+        btnClear = findViewById<Button>(R.id.btn_clear).apply {
             setOnClickListener {
                 shapeEditorView.clearLastShape()
             }
@@ -78,9 +99,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initShapeButton() {
-        btnShapes = findViewById(R.id.btn_shapes)
-        btnShapes.setOnClickListener {
-            popupMenu.show()
+        btnShapes = findViewById<Button>(R.id.btn_shapes).apply {
+            setOnClickListener {
+                popupMenu.show()
+            }
         }
     }
 

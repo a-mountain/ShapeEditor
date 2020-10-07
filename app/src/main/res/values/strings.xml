@@ -8,4 +8,6 @@
     <string name="info">Довідка</string>
     <string name="file">Файл</string>
     <string name="btn_clear">Стерти</string>
+    <string name="color_picker_msg">Виберіть колір</string>
+    <string name="color">Колір</string>
 </resources>

@@ -9,4 +9,6 @@ enum class Color {
     ORANGE,
     GRAY,
     GREEN,
+    PURPLE,
+    PINK,
 }

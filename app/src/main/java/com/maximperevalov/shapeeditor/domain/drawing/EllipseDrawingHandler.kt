@@ -72,7 +72,7 @@ class EllipseDrawingHandler(private val shapes: ArrayList<Shape>) : ShapeDrawing
     }
 
     private fun createCenterPoint(x: Float, y: Float) =
-        Point(x, y, Style(null, Stroke(10F, color = DEFAULT_SELECTION_COLOR)))
+        Point(x, y, Style(fillColor = null, Stroke(10F, color = DEFAULT_SELECTION_COLOR)))
 
     private fun createSelectionEllipse(x: Float, y: Float) =
         Ellipse(x, y, x, y, Style(fillColor = null, Stroke(6F, DEFAULT_SELECTION_COLOR)))
