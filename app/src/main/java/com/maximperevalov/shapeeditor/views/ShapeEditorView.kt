@@ -1,12 +1,16 @@
 package com.maximperevalov.shapeeditor.views
 
 import android.content.Context
-import android.graphics.*
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Paint
 import android.util.AttributeSet
 import android.util.DisplayMetrics
 import android.view.MotionEvent
 import android.view.View
 import com.maximperevalov.shapeeditor.AndroidCanvasDrawer
+import com.maximperevalov.shapeeditor.domain.Color
+import com.maximperevalov.shapeeditor.domain.DEFAULT_STYLE
 import com.maximperevalov.shapeeditor.domain.SelectedShape
 import com.maximperevalov.shapeeditor.domain.ShapeEditor
 
@@ -19,6 +23,18 @@ class ShapeEditorView : View {
     private lateinit var bitmap: Bitmap
 
     private lateinit var shapeEditor: ShapeEditor
+
+    var shapeStrokeColor: Color
+        get() = shapeEditor.currentShapeStyle.stroke?.color ?: DEFAULT_STYLE.stroke!!.color
+        set(value) {
+            shapeEditor.currentShapeStyle.stroke?.color = value
+        }
+
+    var shapeFillColor: Color
+        get() = shapeEditor.currentShapeStyle.fillColor ?: DEFAULT_STYLE.fillColor!!
+        set(value) {
+            shapeEditor.currentShapeStyle.fillColor = value
+        }
 
     constructor(context: Context, attributeSet: AttributeSet) : super(context, attributeSet)
 
@@ -54,7 +70,7 @@ class ShapeEditorView : View {
     }
 
     fun selectShape(selectedShape: SelectedShape) {
-      shapeEditor.selectShape(selectedShape)
+        shapeEditor.selectShape(selectedShape)
         invalidate()
     }
 

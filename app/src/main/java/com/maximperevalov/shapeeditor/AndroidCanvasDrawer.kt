@@ -2,7 +2,7 @@ package com.maximperevalov.shapeeditor
 
 import android.graphics.Canvas
 import com.maximperevalov.shapeeditor.domain.Drawer
-import com.maximperevalov.shapeeditor.domain.shapes.styles.*
+import com.maximperevalov.shapeeditor.domain.shapes.styles.Style
 import com.maximperevalov.shapeeditor.drawers.EllipseDrawer
 import com.maximperevalov.shapeeditor.drawers.RectangleDrawer
 
@@ -25,6 +25,12 @@ class AndroidCanvasDrawer(private val canvas: Canvas) : Drawer {
         endY: Float,
         style: Style
     ) {
+        if (style.fillColor != null) {
+            canvas.drawLine(startX, startY, endX, endY, AndroidStyleHelper.getFillPaint(style))
+        }
+        if (style.stroke != null) {
+            canvas.drawLine(startX, startY, endX, endY, AndroidStyleHelper.getStrokePaint(style))
+        }
         canvas.drawLine(startX, startY, endX, endY, AndroidStyleHelper.getStrokePaint(style))
     }
 

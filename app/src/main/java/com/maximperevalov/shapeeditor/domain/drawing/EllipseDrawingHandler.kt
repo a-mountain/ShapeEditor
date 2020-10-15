@@ -17,7 +17,8 @@ private val DEFAULT_ELLIPSE_COLOR = Color.WHITE
  * Керує процесом малювання еліпса.
  * Еліпс малюється від центру до одного з кутів охоплюючого прямокутника.
  */
-class EllipseDrawingHandler(private val shapes: ArrayList<Shape>) : ShapeDrawingHandler {
+class EllipseDrawingHandler(private val shapes: ArrayList<Shape>, style: Style) :
+    ShapeDrawingHandler(style) {
 
     private var ellipse: Ellipse? = null
     private var centerPoint: Point? = null
@@ -53,9 +54,8 @@ class EllipseDrawingHandler(private val shapes: ArrayList<Shape>) : ShapeDrawing
         makeEllipseReal()
     }
 
-
     private fun makeEllipseReal() {
-        ellipse?.style?.fillColor = DEFAULT_ELLIPSE_COLOR
+        ellipse?.style = currentShapeStyle.copy()
     }
 
     private fun calcOppositeRectCorner(

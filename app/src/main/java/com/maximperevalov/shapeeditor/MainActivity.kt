@@ -2,7 +2,6 @@ package com.maximperevalov.shapeeditor
 
 import android.os.Bundle
 import android.util.DisplayMetrics
-import android.util.Log
 import android.view.Menu
 import android.widget.Button
 import android.widget.PopupMenu
@@ -18,11 +17,15 @@ import com.maximperevalov.shapeeditor.views.ShapeEditorView
 class MainActivity : AppCompatActivity() {
 
     private lateinit var shapeEditorView: ShapeEditorView
+
     private lateinit var btnShapes: Button
     private lateinit var btnClear: Button
     private lateinit var btnColorPicker: Button
+    private lateinit var btnStrokeColorPicker: Button
+
     private lateinit var popupMenu: PopupMenu
-    private lateinit var colorPickerDialog: ColorPickerDialogFragment
+    private lateinit var fillColorPickerDialog: ColorPickerDialogFragment
+    private lateinit var strokeColorPickerDialog: ColorPickerDialogFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,13 +34,32 @@ class MainActivity : AppCompatActivity() {
         initClearButton()
         initShapeButton()
         initColorPickerButton()
+        initButtonStrokeColorPicker()
         initPopupMenu()
         initColorPickerDialog()
+        initStrokeColorPickerDialog()
+    }
+
+    private fun initStrokeColorPickerDialog() {
+        strokeColorPickerDialog = ColorPickerDialogFragment(defaultSelectedColor = Color.PINK) {
+            btnStrokeColorPicker.setTextColor(it.toAndroidColor())
+            shapeEditorView.shapeStrokeColor = it
+        }
+    }
+
+    private fun initButtonStrokeColorPicker() {
+        btnStrokeColorPicker = findViewById<Button>(R.id.btn_color_stroke).apply {
+            setTextColor(shapeEditorView.shapeStrokeColor.toAndroidColor())
+            setOnClickListener {
+                strokeColorPickerDialog.show(supportFragmentManager, "strokeColorPickerDialog")
+            }
+        }
     }
 
     private fun initColorPickerDialog() {
-        colorPickerDialog = ColorPickerDialogFragment(selectedColor = Color.PINK) {
-            Log.i("ColorPicker", it.toString())
+        fillColorPickerDialog = ColorPickerDialogFragment(defaultSelectedColor = Color.PINK) {
+            btnColorPicker.setTextColor(it.toAndroidColor())
+            shapeEditorView.shapeFillColor = it
         }
     }
 
@@ -80,8 +102,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun initColorPickerButton() {
         btnColorPicker = findViewById<Button>(R.id.btn_color_picker).apply {
+            setTextColor(shapeEditorView.shapeFillColor.toAndroidColor())
             setOnClickListener {
-                colorPickerDialog.show(supportFragmentManager, "colorPicker")
+                fillColorPickerDialog.show(supportFragmentManager, "colorPicker")
             }
         }
     }

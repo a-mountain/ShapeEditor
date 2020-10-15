@@ -12,10 +12,19 @@ private val DEFAULT_POINT_COLOR = Color.BLUE
 /**
  * Керує процесом малювання точки
  */
-class PointDrawingHandler(private val shapes: ArrayList<Shape>) : ShapeDrawingHandler {
+class PointDrawingHandler(private val shapes: ArrayList<Shape>, style: Style) :
+    ShapeDrawingHandler(style) {
 
     override fun onFirstTouch(firstX: Float, firstY: Float) {
-        val point = Point(firstX, firstY, Style(fillColor = null, Stroke(6F, DEFAULT_POINT_COLOR)))
+        val point =
+            Point(
+                firstX,
+                firstY,
+                Style(
+                    fillColor = null,
+                    Stroke(6F, currentShapeStyle.stroke?.color ?: DEFAULT_POINT_COLOR)
+                )
+            )
         shapes.add(point)
     }
 

@@ -1,6 +1,5 @@
 package com.maximperevalov.shapeeditor.domain.drawing
 
-import com.maximperevalov.shapeeditor.domain.Color
 import com.maximperevalov.shapeeditor.domain.DEFAULT_SELECTION_COLOR
 import com.maximperevalov.shapeeditor.domain.Shape
 import com.maximperevalov.shapeeditor.domain.ShapeDrawingHandler
@@ -8,13 +7,11 @@ import com.maximperevalov.shapeeditor.domain.shapes.Line
 import com.maximperevalov.shapeeditor.domain.shapes.styles.Stroke
 import com.maximperevalov.shapeeditor.domain.shapes.styles.Style
 
-private val DEFAULT_LINE_COLOR = Color.GREEN
-
-
 /**
  *  Керує процесом малювання лінії
  */
-class LineDrawingHandler(private val shapes: ArrayList<Shape>) : ShapeDrawingHandler {
+class LineDrawingHandler(private val shapes: ArrayList<Shape>, style: Style) :
+    ShapeDrawingHandler(style) {
 
     private var line: Line? = null
 
@@ -35,7 +32,7 @@ class LineDrawingHandler(private val shapes: ArrayList<Shape>) : ShapeDrawingHan
     }
 
     private fun makeLineReal() {
-        line?.style?.stroke!!.color = DEFAULT_LINE_COLOR
+        line?.style = currentShapeStyle.copy()
     }
 
     private fun createSelectionLine(x: Float, y: Float) =

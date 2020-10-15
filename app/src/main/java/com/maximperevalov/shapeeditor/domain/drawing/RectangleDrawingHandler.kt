@@ -13,7 +13,8 @@ private val DEFAULT_RECT_COLOR = Color.ORANGE
 /**
  * Керує процесом малювання прямокутника
  */
-class RectangleDrawingHandler(private val shapes: ArrayList<Shape>) : ShapeDrawingHandler {
+class RectangleDrawingHandler(private val shapes: ArrayList<Shape>, style: Style) :
+    ShapeDrawingHandler(style) {
 
     private var rectangle: Rectangle? = null
 
@@ -34,7 +35,7 @@ class RectangleDrawingHandler(private val shapes: ArrayList<Shape>) : ShapeDrawi
     }
 
     private fun makeRectangleReal() {
-        rectangle?.style?.fillColor = DEFAULT_RECT_COLOR
+        rectangle?.style = currentShapeStyle.copy()
     }
 
     private fun createSelectionRectangle(x: Float, y: Float) =

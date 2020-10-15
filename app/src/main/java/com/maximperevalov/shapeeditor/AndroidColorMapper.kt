@@ -17,7 +17,9 @@ object AndroidColorMapper {
         Color.ORANGE -> android.graphics.Color.rgb(255, 128, 0)
         Color.GRAY -> android.graphics.Color.GRAY
         Color.GREEN -> android.graphics.Color.GREEN
-        Color.PURPLE -> android.graphics.Color.rgb(128,0,128)
-        Color.PINK -> android.graphics.Color.rgb(255,192,203)
+        Color.PURPLE -> android.graphics.Color.rgb(128, 0, 128)
+        Color.PINK -> android.graphics.Color.rgb(255, 192, 203)
     }
 }
+
+fun Color.toAndroidColor() = AndroidColorMapper.getAndroidColor(this)

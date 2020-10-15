@@ -5,11 +5,11 @@ private val DEFAULT_SELECTED_SHAPE = SelectedShape.ELLIPSE
 /**
  * Головний клас, який репрезентує редактор фігур.
  */
-class ShapeEditor(width: Int, height: Int, private val drawer: Drawer): ShapeDrawingHandler {
+class ShapeEditor(width: Int, height: Int, private val drawer: Drawer) : ShapeDrawingHandler() {
 
     private val shapes = ArrayList<Shape>()
 
-    private val shapeDrawingHandlerFactory = ShapeDrawingHandlerFactory(shapes)
+    private val shapeDrawingHandlerFactory = ShapeDrawingHandlerFactory(shapes, currentShapeStyle)
     private var shapeDrawingHandler: ShapeDrawingHandler =
         shapeDrawingHandlerFactory.getShapeDrawingHandler(DEFAULT_SELECTED_SHAPE)
 

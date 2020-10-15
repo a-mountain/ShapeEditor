@@ -44,6 +44,7 @@ class ColorPickerDialogFragment(
         button.setOnClickListener {
             dialog?.cancel()
             colorSelectionListener.onSelection(selectedColor = colors[index])
+
         }
     }
 
