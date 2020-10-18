@@ -3,7 +3,7 @@ package com.maximperevalov.shapeeditor.domain.helpers
 import kotlin.math.sqrt
 
 /**
- * Допоміжний клас, як домогає з розрахунками, які стосуються точок і векторів.
+ * Домогає з розрахунками, які стосуються точок і векторів.
  */
 data class PointMath(val x: Float, val y: Float) {
 

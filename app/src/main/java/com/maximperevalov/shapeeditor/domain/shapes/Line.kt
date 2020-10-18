@@ -8,8 +8,8 @@ import com.maximperevalov.shapeeditor.domain.shapes.styles.Style
  * Репрезентує - лінію
  */
 class Line(
-    var startX: Float, var startY: Float, var endX: Float, var endY: Float, var style: Style,
-) : Shape {
+    var startX: Float, var startY: Float, var endX: Float, var endY: Float, style: Style,
+) : Shape(style) {
     override fun draw(drawer: Drawer) {
         drawer.drawLine(startX, startY, endX, endY, style)
     }

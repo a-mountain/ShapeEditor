@@ -11,4 +11,5 @@
     <string name="color_picker_msg">Виберіть колір</string>
     <string name="color">Заповнення</string>
     <string name="stroke">Обведення</string>
+    <string name="close">Закрити</string>
 </resources>

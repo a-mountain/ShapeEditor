@@ -9,7 +9,6 @@ const val DEFAULT_STROKE_WIDTH = 5F
 val DEFAULT_STYLE =
     Style(fillColor = Color.PURPLE, Stroke(DEFAULT_STROKE_WIDTH, Color.ORANGE))
 
-
 /**
  *  ShapeCreatingHandler - керує процесом малювання фігури
  */
@@ -21,5 +20,4 @@ abstract class ShapeDrawingHandler(open var currentShapeStyle: Style = DEFAULT_S
     abstract fun onMove(newX: Float, newY: Float)
 
     abstract fun onLastTouch(lastX: Float, lastY: Float)
-
 }

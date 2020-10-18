@@ -1,6 +1,6 @@
 package com.maximperevalov.shapeeditor.domain
 
-import com.maximperevalov.shapeeditor.domain.shapes.styles.*
+import com.maximperevalov.shapeeditor.domain.shapes.styles.Style
 
 /**
  *  Містить базові функціїї малювання об'єктів.
@@ -11,8 +11,8 @@ interface Drawer {
     fun drawPoint(x: Float, y: Float, style: Style)
 
     /**
-     * @param x - x кордината верхьного-лівого кута
-     * @param y - y кордината верхьного-лівого кута
+     * @param x - x кордината верхьного-лівого кута прямокутника
+     * @param y - y кордината верхьного-лівого кута прямокутника
      */
     fun drawRect(x: Float, y: Float, width: Float, height: Float, style: Style)
 

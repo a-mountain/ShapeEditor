@@ -1,58 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".MainActivity">
+
     <LinearLayout
-        style="@style/Widget.AppCompat.ButtonBar"
         android:id="@+id/linearLayout"
+        style="@style/Widget.AppCompat.ButtonBar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:gravity="top"
         android:orientation="horizontal">
 
-        <Button
+        <ImageButton
+            android:id="@+id/btn_clear"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/colorPrimary"
+            android:contentDescription="@string/btn_clear"
+            app:srcCompat="@drawable/ic_delete" />
+
+        <ImageButton
             android:id="@+id/btn_color_stroke"
             style="@style/Widget.AppCompat.ButtonBar"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@color/colorPrimary"
-            android:text="@string/stroke"
-            android:textColor="@color/colorWhite" />
+            android:contentDescription="@string/stroke"
+            app:srcCompat="@drawable/ic_stroke_color" />
 
-        <Button
-            style="@style/Widget.AppCompat.ButtonBar"
-            android:background="@color/colorPrimary"
-            android:textColor="@color/colorWhite"
-            android:id="@+id/btn_color_picker"
+        <com.maximperevalov.shapeeditor.views.ShapeInfoButtonView
+            android:id="@+id/btn_shape_info"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/color" />
+            android:background="@color/colorPrimary" />
 
-        <Button
+        <ImageButton
+            android:id="@+id/btn_fill_color"
             style="@style/Widget.AppCompat.ButtonBar"
-            android:background="@color/colorPrimary"
-            android:textColor="@color/colorWhite"
-            android:id="@+id/btn_clear"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/btn_clear" />
-
-        <Button
-            style="@style/Widget.AppCompat.ButtonBar"
             android:background="@color/colorPrimary"
+            android:contentDescription="@string/color_picker_msg"
+            android:text="@string/color"
             android:textColor="@color/colorWhite"
+            app:srcCompat="@drawable/ic_fill_color" />
+
+        <ImageButton
             android:id="@+id/btn_shapes"
+            style="@style/Widget.AppCompat.ButtonBar"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/shape_menu" />
+            android:background="@color/colorPrimary"
+            android:contentDescription="@string/shape_menu"
+            app:srcCompat="@drawable/ic_shapes" />
+
 
     </LinearLayout>
 

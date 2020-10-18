@@ -1,16 +1,22 @@
 package com.maximperevalov.shapeeditor.fragments
 
-import android.app.AlertDialog
-import android.app.Dialog
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import android.widget.Button
+import android.widget.CheckBox
+import android.widget.CompoundButton
+import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.maximperevalov.shapeeditor.R
 import com.maximperevalov.shapeeditor.domain.Color
 
 class ColorPickerDialogFragment(
-    private var defaultSelectedColor: Color,
+    private val title: String,
+    private val checkboxLabel: String,
+    private val checkBoxListener: (CompoundButton, Boolean) -> Unit,
     private val colorSelectionListener: ColorSelectionListener,
 ) : DialogFragment() {
 
@@ -44,17 +50,45 @@ class ColorPickerDialogFragment(
         button.setOnClickListener {
             dialog?.cancel()
             colorSelectionListener.onSelection(selectedColor = colors[index])
-
         }
     }
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val view = layoutInflater.inflate(R.layout.color_picker, null)
-        view.initColorButtons()
-        val builder = AlertDialog.Builder(activity)
-            .setView(view)
-            .setNegativeButton("Cancel", null)
-        return builder.create()
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return layoutInflater.inflate(R.layout.color_picker, null).apply {
+            initTitle()
+            initCheckbox()
+            initColorButtons()
+            initCancelButton()
+        }
+    }
+
+    private fun View.initCheckbox() {
+        findViewById<CheckBox>(R.id.checkBox).apply {
+            isChecked = true
+            text = checkboxLabel
+            setOnCheckedChangeListener { btn, isChecked ->
+                checkBoxListener(btn, isChecked)
+                dialog?.cancel()
+            }
+        }
+    }
+
+    private fun View.initTitle() {
+        findViewById<TextView>(R.id.title).apply {
+            text = title
+        }
+    }
+
+    private fun View.initCancelButton() {
+        findViewById<Button>(R.id.cancel).apply {
+            setOnClickListener {
+                dialog?.cancel()
+            }
+        }
     }
 
     fun interface ColorSelectionListener {

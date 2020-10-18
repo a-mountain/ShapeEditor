@@ -9,10 +9,9 @@ import android.util.DisplayMetrics
 import android.view.MotionEvent
 import android.view.View
 import com.maximperevalov.shapeeditor.AndroidCanvasDrawer
-import com.maximperevalov.shapeeditor.domain.Color
-import com.maximperevalov.shapeeditor.domain.DEFAULT_STYLE
 import com.maximperevalov.shapeeditor.domain.SelectedShape
 import com.maximperevalov.shapeeditor.domain.ShapeEditor
+import com.maximperevalov.shapeeditor.domain.StyleManager
 
 /**
  * Графічне представлення полотна, для малювання фігури.
@@ -23,17 +22,13 @@ class ShapeEditorView : View {
     private lateinit var bitmap: Bitmap
 
     private lateinit var shapeEditor: ShapeEditor
+    lateinit var styleManager: StyleManager
 
-    var shapeStrokeColor: Color
-        get() = shapeEditor.currentShapeStyle.stroke?.color ?: DEFAULT_STYLE.stroke!!.color
+    var selectedShape: SelectedShape
+        get() = shapeEditor.selectedShape
         set(value) {
-            shapeEditor.currentShapeStyle.stroke?.color = value
-        }
-
-    var shapeFillColor: Color
-        get() = shapeEditor.currentShapeStyle.fillColor ?: DEFAULT_STYLE.fillColor!!
-        set(value) {
-            shapeEditor.currentShapeStyle.fillColor = value
+            shapeEditor.selectedShape = value
+            invalidate()
         }
 
     constructor(context: Context, attributeSet: AttributeSet) : super(context, attributeSet)
@@ -50,6 +45,7 @@ class ShapeEditorView : View {
 
         val drawer = AndroidCanvasDrawer(canvas)
         shapeEditor = ShapeEditor(bitmap.width, bitmap.height, drawer)
+        styleManager = StyleManager(shapeEditor.currentShapeStyle)
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -66,11 +62,6 @@ class ShapeEditorView : View {
 
     fun clearAllShapes() {
         shapeEditor.clearAllShapes()
-        invalidate()
-    }
-
-    fun selectShape(selectedShape: SelectedShape) {
-        shapeEditor.selectShape(selectedShape)
         invalidate()
     }
 
