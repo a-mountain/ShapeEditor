@@ -30,7 +30,6 @@ class LineWithDoubleCircleDrawerHandler(private val shapes: ArrayList<Shape>, st
         lineWithDoubleCircle?.style = currentShapeStyle.copy()
     }
 
-
     private fun createSelectionLineWithDoubleCircle(x: Float, y: Float) =
         LineWithDoubleCircle(
             x,

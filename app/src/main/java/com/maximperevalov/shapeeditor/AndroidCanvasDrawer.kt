@@ -1,6 +1,7 @@
 package com.maximperevalov.shapeeditor
 
 import android.graphics.Canvas
+import android.graphics.Paint
 import com.maximperevalov.shapeeditor.domain.Drawer
 import com.maximperevalov.shapeeditor.domain.shapes.styles.Style
 
@@ -24,45 +25,32 @@ class AndroidCanvasDrawer(private val canvas: Canvas) : Drawer {
     }
 
     override fun drawRect(x: Float, y: Float, width: Float, height: Float, style: Style) {
-        val drawFill: () -> Unit = {
-            canvas.drawRect(x, y, width, height, AndroidStyleMapper.getFillPaint(style))
+        drawShapeWithArea(style) {
+            canvas.drawRect(x, y, width, height, it)
         }
-        val drawStroke: () -> Unit = {
-            canvas.drawRect(x, y, width, height, AndroidStyleMapper.getStrokePaint(style))
-        }
-        drawShapeWithArea(style, drawFill, drawStroke)
     }
 
     override fun drawEllipse(x: Float, y: Float, width: Float, height: Float, style: Style) {
-        val drawFill: () -> Unit = {
-            canvas.drawOval(x, y, width, height, AndroidStyleMapper.getFillPaint(style))
+        drawShapeWithArea(style) {
+            canvas.drawOval(x, y, width, height, it)
         }
-        val drawStroke: () -> Unit = {
-            canvas.drawOval(x, y, width, height, AndroidStyleMapper.getStrokePaint(style))
-        }
-        drawShapeWithArea(style, drawFill, drawStroke)
     }
 
     override fun drawCircle(centerX: Float, centerY: Float, radius: Float, style: Style) {
-        val drawFill: () -> Unit = {
-            canvas.drawCircle(centerX, centerY, radius, AndroidStyleMapper.getFillPaint(style))
+        drawShapeWithArea(style) {
+            canvas.drawCircle(centerX, centerY, radius, it)
         }
-        val drawStroke: () -> Unit = {
-            canvas.drawCircle(centerX, centerY, radius, AndroidStyleMapper.getStrokePaint(style))
-        }
-        drawShapeWithArea(style, drawFill, drawStroke)
     }
 
     private inline fun drawShapeWithArea(
         style: Style,
-        drawFill: () -> Unit,
-        drawStroke: () -> Unit,
+        drawShape: (Paint) -> Unit,
     ) {
         if (!style.isAbsoluteTransparent) {
-            drawFill()
+            drawShape(AndroidStyleMapper.getFillPaint(style))
         }
         if (!style.isStrokeless) {
-            drawStroke()
+            drawShape(AndroidStyleMapper.getStrokePaint(style))
         }
     }
 }
