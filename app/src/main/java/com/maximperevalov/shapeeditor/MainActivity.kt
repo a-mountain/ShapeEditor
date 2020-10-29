@@ -9,7 +9,6 @@ import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.maximperevalov.shapeeditor.domain.SelectedShape
-import com.maximperevalov.shapeeditor.domain.ShapeEditorController
 import com.maximperevalov.shapeeditor.domain.shapes.styles.Style
 import com.maximperevalov.shapeeditor.fragments.ColorPickerDialogFragment
 import com.maximperevalov.shapeeditor.views.ShapeEditorView

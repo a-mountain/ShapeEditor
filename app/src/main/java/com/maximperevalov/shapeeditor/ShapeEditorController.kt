@@ -1,5 +1,7 @@
-package com.maximperevalov.shapeeditor.domain
+package com.maximperevalov.shapeeditor
 
+import com.maximperevalov.shapeeditor.domain.Color
+import com.maximperevalov.shapeeditor.domain.SelectedShape
 import com.maximperevalov.shapeeditor.domain.shapes.styles.Style
 import com.maximperevalov.shapeeditor.views.ShapeEditorView
 import com.maximperevalov.shapeeditor.views.ShapeInfoButtonView
