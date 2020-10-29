@@ -9,13 +9,13 @@ import com.maximperevalov.shapeeditor.domain.shapes.styles.Style
 object AndroidStyleMapper {
 
     fun getFillPaint(shapeStyle: Style) = Paint().apply {
-        val fillColor = shapeStyle.fillColor ?: throw Exception("Fill color must be not Null")
+        val fillColor = shapeStyle.fillColor
         style = Paint.Style.FILL
         color = fillColor.toAndroidColor()
     }
 
     fun getStrokePaint(shapeStyle: Style) = Paint().apply {
-        val stroke = shapeStyle.stroke ?: throw Exception("Stroke must be not Null")
+        val stroke = shapeStyle.stroke
         style = Paint.Style.STROKE
         color = stroke.color.toAndroidColor()
         strokeWidth = stroke.width

@@ -1,10 +1,9 @@
 package com.maximperevalov.shapeeditor.domain.drawing
 
-import com.maximperevalov.shapeeditor.domain.DEFAULT_SELECTION_COLOR
 import com.maximperevalov.shapeeditor.domain.Shape
 import com.maximperevalov.shapeeditor.domain.ShapeDrawingHandler
 import com.maximperevalov.shapeeditor.domain.shapes.Line
-import com.maximperevalov.shapeeditor.domain.shapes.styles.Stroke
+import com.maximperevalov.shapeeditor.domain.shapes.styles.DEFAULT_SELECTION_COLOR
 import com.maximperevalov.shapeeditor.domain.shapes.styles.Style
 
 /**
@@ -36,5 +35,5 @@ class LineDrawingHandler(private val shapes: ArrayList<Shape>, style: Style) :
     }
 
     private fun createSelectionLine(x: Float, y: Float) =
-        Line(x, y, x, y, Style(fillColor = null, Stroke(5F, DEFAULT_SELECTION_COLOR)))
+        Line(x, y, x, y, DEFAULT_SELECTION_COLOR, width = 5F)
 }

@@ -17,17 +17,30 @@ class ShapeEditor(width: Int, height: Int, private val drawer: Drawer) : ShapeDr
     var selectedShape: SelectedShape = DEFAULT_SELECTED_SHAPE
         set(value) {
             field = value
-            shapeDrawingHandler = shapeDrawingHandlerFactory.getShapeDrawingHandler(value)
+            updateShapeDrawingHandler()
+        }
+
+    override var currentShapeStyle: Style
+        get() = super.currentShapeStyle
+        set(value) {
+            super.currentShapeStyle = value
+            updateShapeDrawingHandler()
         }
 
     private val shapes = ArrayList<Shape>()
 
     private val shapeDrawingHandlerFactory = ShapeDrawingHandlerFactory(shapes, currentShapeStyle)
 
-    private var shapeDrawingHandler: ShapeDrawingHandler =
-        shapeDrawingHandlerFactory.getShapeDrawingHandler(selectedShape)
+    private var shapeDrawingHandler: ShapeDrawingHandler = getShapeDrawingHandler()
 
     private val background = createBackground(width, height)
+
+    private fun updateShapeDrawingHandler() {
+        shapeDrawingHandler = getShapeDrawingHandler()
+    }
+
+    private fun getShapeDrawingHandler() =
+        shapeDrawingHandlerFactory.getShapeDrawingHandler(selectedShape, currentShapeStyle)
 
     fun clearLastShape() {
         if (shapes.isNotEmpty()) {
@@ -65,7 +78,13 @@ class ShapeEditor(width: Int, height: Int, private val drawer: Drawer) : ShapeDr
     }
 
     private fun createBackground(width: Int, height: Int) =
-        Rectangle(0F, 0F, width.toFloat(), height.toFloat(), Style(Color.WHITE, null))
+        Rectangle(
+            0F,
+            0F,
+            width.toFloat(),
+            height.toFloat(),
+            Style.createStrokelessStyle(Color.WHITE)
+        )
 }
 
 private class ShapeDrawingHandlerFactory(shapes: ArrayList<Shape>, style: Style) {
@@ -75,12 +94,10 @@ private class ShapeDrawingHandlerFactory(shapes: ArrayList<Shape>, style: Style)
     private val lineDrawingHandler = LineDrawingHandler(shapes, style)
     private val pointDrawingHandler = PointDrawingHandler(shapes, style)
 
-    fun getShapeDrawingHandler(selectedShape: SelectedShape): ShapeDrawingHandler {
-        return when (selectedShape) {
-            SelectedShape.RECTANGLE -> rectDrawingHandler
-            SelectedShape.ELLIPSE -> ellipseDrawingHandler
-            SelectedShape.LINE -> lineDrawingHandler
-            SelectedShape.POINT -> pointDrawingHandler
-        }
-    }
+    fun getShapeDrawingHandler(selectedShape: SelectedShape, style: Style) = when (selectedShape) {
+        SelectedShape.RECTANGLE -> rectDrawingHandler
+        SelectedShape.ELLIPSE -> ellipseDrawingHandler
+        SelectedShape.LINE -> lineDrawingHandler
+        SelectedShape.POINT -> pointDrawingHandler
+    }.apply { currentShapeStyle = style }
 }

@@ -11,7 +11,7 @@ import android.view.View
 import com.maximperevalov.shapeeditor.AndroidCanvasDrawer
 import com.maximperevalov.shapeeditor.domain.SelectedShape
 import com.maximperevalov.shapeeditor.domain.ShapeEditor
-import com.maximperevalov.shapeeditor.domain.StyleManager
+import com.maximperevalov.shapeeditor.domain.shapes.styles.Style
 
 /**
  * Графічне представлення полотна, для малювання фігури.
@@ -22,7 +22,12 @@ class ShapeEditorView : View {
     private lateinit var bitmap: Bitmap
 
     private lateinit var shapeEditor: ShapeEditor
-    lateinit var styleManager: StyleManager
+
+    var shapeStyle: Style
+        get() = shapeEditor.currentShapeStyle
+        set(value) {
+            shapeEditor.currentShapeStyle = value
+        }
 
     var selectedShape: SelectedShape
         get() = shapeEditor.selectedShape
@@ -45,7 +50,6 @@ class ShapeEditorView : View {
 
         val drawer = AndroidCanvasDrawer(canvas)
         shapeEditor = ShapeEditor(bitmap.width, bitmap.height, drawer)
-        styleManager = StyleManager(shapeEditor.currentShapeStyle)
     }
 
     override fun onDraw(canvas: Canvas) {

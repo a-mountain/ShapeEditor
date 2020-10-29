@@ -1,9 +1,9 @@
 package com.maximperevalov.shapeeditor.domain.drawing
 
-import com.maximperevalov.shapeeditor.domain.DEFAULT_SELECTION_COLOR
 import com.maximperevalov.shapeeditor.domain.Shape
 import com.maximperevalov.shapeeditor.domain.ShapeDrawingHandler
 import com.maximperevalov.shapeeditor.domain.shapes.Rectangle
+import com.maximperevalov.shapeeditor.domain.shapes.styles.DEFAULT_SELECTION_COLOR
 import com.maximperevalov.shapeeditor.domain.shapes.styles.Stroke
 import com.maximperevalov.shapeeditor.domain.shapes.styles.Style
 
@@ -36,6 +36,10 @@ class RectangleDrawingHandler(private val shapes: ArrayList<Shape>, style: Style
 
     private fun createSelectionRectangle(x: Float, y: Float) =
         Rectangle(
-            x, y, x, y, Style(fillColor = null, Stroke(width = 5F, color = DEFAULT_SELECTION_COLOR))
+            x,
+            y,
+            x,
+            y,
+            Style.createAbsoluteTransparentStyle(Stroke(width = 5F, DEFAULT_SELECTION_COLOR))
         )
 }

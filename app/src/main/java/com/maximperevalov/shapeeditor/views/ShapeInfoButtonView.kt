@@ -8,7 +8,6 @@ import com.maximperevalov.shapeeditor.AndroidCanvasDrawer
 import com.maximperevalov.shapeeditor.domain.Color
 import com.maximperevalov.shapeeditor.domain.SelectedShape
 import com.maximperevalov.shapeeditor.domain.Shape
-import com.maximperevalov.shapeeditor.domain.StyleManager
 import com.maximperevalov.shapeeditor.domain.shapes.Ellipse
 import com.maximperevalov.shapeeditor.domain.shapes.Line
 import com.maximperevalov.shapeeditor.domain.shapes.Point
@@ -26,8 +25,11 @@ private const val STROKE_WIDTH = 7F
 class ShapeInfoButtonView(context: Context, attributes: AttributeSet) :
     androidx.appcompat.widget.AppCompatImageButton(context, attributes) {
 
-    private val style = Style(Color.BLACK, Stroke(STROKE_WIDTH, Color.BLACK))
-    private val styleManager = StyleManager(style)
+    var style = Style(Color.BLACK, Stroke(STROKE_WIDTH, Color.BLACK))
+        set(value) {
+            field = value
+            draw()
+        }
 
     private lateinit var shapeFactory: ShapeFactory
     private lateinit var bitmap: Bitmap
@@ -36,33 +38,6 @@ class ShapeInfoButtonView(context: Context, attributes: AttributeSet) :
     private lateinit var shape: Shape
 
     private lateinit var background: Rectangle
-
-    var hasStroke: Boolean
-        get() = styleManager.hasStroke
-        set(value) {
-            styleManager.hasStroke = value
-            drawShape()
-        }
-    var hasFill: Boolean
-        get() = styleManager.hasFill
-        set(value) {
-            styleManager.hasFill = value
-            drawShape()
-        }
-
-    var strokeColor: Color
-        get() = styleManager.strokeColor
-        set(value) {
-            styleManager.strokeColor = value
-            drawShape()
-        }
-
-    var fillColor: Color
-        get() = styleManager.fillColor
-        set(value) {
-            styleManager.fillColor = value
-            drawShape()
-        }
 
     fun init(width: Int, height: Int, padding: Float) {
         isClickable = false
@@ -80,25 +55,30 @@ class ShapeInfoButtonView(context: Context, attributes: AttributeSet) :
         shapeFactory = ShapeFactory(width.toFloat(), height.toFloat(), padding, style)
         drawer = AndroidCanvasDrawer(canvas)
 
-        setShapeType(SelectedShape.ELLIPSE)
+        setSelectedShape(SelectedShape.ELLIPSE)
     }
 
-    fun setShapeType(selectedShape: SelectedShape) {
+    fun setSelectedShape(selectedShape: SelectedShape) {
         shape = shapeFactory.getShape(selectedShape)
-        drawShape()
+        draw()
     }
 
     private fun drawBackground() {
         background.draw(drawer)
     }
 
-    private fun drawShape() {
+    private fun draw() {
         drawBackground()
+        applyCurrentStyleToShape()
         shape.draw(drawer)
         setImageBitmap(bitmap)
     }
 
+    private fun applyCurrentStyleToShape() {
+        shape.style = style.withStrokeWidth(shape.style.stroke.width)
+    }
 }
+
 
 private class ShapeFactory(width: Float, height: Float, padding: Float, style: Style) {
 
@@ -110,14 +90,14 @@ private class ShapeFactory(width: Float, height: Float, padding: Float, style: S
         padding,
         widthWithPadding,
         heightWithPadding,
-        style,
+        style.withStrokeWidth(7F)
     )
     private val rectangle = Rectangle(
         padding,
         padding,
         widthWithPadding,
         heightWithPadding,
-        style,
+        style.withStrokeWidth(5F),
     )
     private val ellipse =
         Ellipse(
@@ -125,12 +105,12 @@ private class ShapeFactory(width: Float, height: Float, padding: Float, style: S
             padding,
             widthWithPadding,
             heightWithPadding,
-            style
+            style.withStrokeWidth(5F)
         )
     private val point = Point(
         width / 2,
         height / 2,
-        style,
+        style.withStrokeWidth(7F),
     )
 
     fun getShape(selectedShape: SelectedShape) = when (selectedShape) {

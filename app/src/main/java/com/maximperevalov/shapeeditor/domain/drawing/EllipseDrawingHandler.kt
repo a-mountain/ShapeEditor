@@ -1,12 +1,12 @@
 package com.maximperevalov.shapeeditor.domain.drawing
 
-import com.maximperevalov.shapeeditor.domain.DEFAULT_SELECTION_COLOR
 import com.maximperevalov.shapeeditor.domain.Shape
 import com.maximperevalov.shapeeditor.domain.ShapeDrawingHandler
 import com.maximperevalov.shapeeditor.domain.helpers.PointMath
 import com.maximperevalov.shapeeditor.domain.helpers.vector
 import com.maximperevalov.shapeeditor.domain.shapes.Ellipse
 import com.maximperevalov.shapeeditor.domain.shapes.Point
+import com.maximperevalov.shapeeditor.domain.shapes.styles.DEFAULT_SELECTION_COLOR
 import com.maximperevalov.shapeeditor.domain.shapes.styles.Stroke
 import com.maximperevalov.shapeeditor.domain.shapes.styles.Style
 
@@ -69,8 +69,18 @@ class EllipseDrawingHandler(private val shapes: ArrayList<Shape>, style: Style) 
     }
 
     private fun createCenterPoint(x: Float, y: Float) =
-        Point(x, y, Style(fillColor = null, Stroke(10F, color = DEFAULT_SELECTION_COLOR)))
+        Point(
+            x,
+            y,
+            Style.createAbsoluteTransparentStyle(Stroke(10F, color = DEFAULT_SELECTION_COLOR))
+        )
 
     private fun createSelectionEllipse(x: Float, y: Float) =
-        Ellipse(x, y, x, y, Style(fillColor = null, Stroke(6F, DEFAULT_SELECTION_COLOR)))
+        Ellipse(
+            x,
+            y,
+            x,
+            y,
+            Style.createAbsoluteTransparentStyle(Stroke(6F, DEFAULT_SELECTION_COLOR))
+        )
 }

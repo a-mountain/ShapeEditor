@@ -1,13 +1,9 @@
 package com.maximperevalov.shapeeditor.domain.drawing
 
-import com.maximperevalov.shapeeditor.domain.Color
 import com.maximperevalov.shapeeditor.domain.Shape
 import com.maximperevalov.shapeeditor.domain.ShapeDrawingHandler
 import com.maximperevalov.shapeeditor.domain.shapes.Point
-import com.maximperevalov.shapeeditor.domain.shapes.styles.Stroke
 import com.maximperevalov.shapeeditor.domain.shapes.styles.Style
-
-private val DEFAULT_POINT_COLOR = Color.BLUE
 
 /**
  * Керує процесом малювання точки
@@ -16,15 +12,7 @@ class PointDrawingHandler(private val shapes: ArrayList<Shape>, style: Style) :
     ShapeDrawingHandler(style) {
 
     override fun onFirstTouch(firstX: Float, firstY: Float) {
-        val point =
-            Point(
-                firstX,
-                firstY,
-                Style(
-                    fillColor = null,
-                    Stroke(6F, currentShapeStyle.stroke?.color ?: DEFAULT_POINT_COLOR)
-                )
-            )
+        val point = Point(firstX, firstY, currentShapeStyle.stroke.color, radius = 6F)
         shapes.add(point)
     }
 

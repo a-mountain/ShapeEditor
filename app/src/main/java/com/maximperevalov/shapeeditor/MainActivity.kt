@@ -9,25 +9,18 @@ import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.maximperevalov.shapeeditor.domain.SelectedShape
+import com.maximperevalov.shapeeditor.domain.ShapeEditorController
+import com.maximperevalov.shapeeditor.domain.shapes.styles.Style
 import com.maximperevalov.shapeeditor.fragments.ColorPickerDialogFragment
 import com.maximperevalov.shapeeditor.views.ShapeEditorView
 import com.maximperevalov.shapeeditor.views.ShapeInfoButtonView
-
 
 /**
  * Головне вікно додатку
  */
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var shapeEditorView: ShapeEditorView
-
-    private lateinit var btnShapes: ImageButton
-    private lateinit var btnClear: ImageButton
-
-    private lateinit var btnColorPicker: ImageButton
-    private lateinit var btnStrokeColorPicker: ImageButton
-
-    private lateinit var btnShapeInfoInfo: ShapeInfoButtonView
+    private lateinit var shapeEditorController: ShapeEditorController
 
     private lateinit var popupMenu: PopupMenu
 
@@ -37,36 +30,44 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        initEditorView()
+
+        val shapeEditor = initEditorView()
+        val shapeInfoButton = initShapeInfoButton(shapeEditor.selectedShape, shapeEditor.shapeStyle)
+        initShapeEditorController(shapeEditor, shapeInfoButton)
         initClearButton()
-        initShapeButton()
-        initFillColorPickerButton()
-        initStrokeColorPickerButton()
-        initPopupMenu()
+
+        val shapesButton = initShapeButton()
+        initPopupMenu(shapesButton)
+
         initFillColorPickerDialog()
+        initFillColorPickerButton()
         initStrokeColorPickerDialog()
-        initShapeInfoButton()
+        initStrokeColorPickerButton()
     }
 
-    private fun initShapeInfoButton() {
-        btnShapeInfoInfo = findViewById<ShapeInfoButtonView>(R.id.btn_shape_info).apply {
-            init(100, 100, 15F)
-            setShapeType(shapeEditorView.selectedShape)
-            fillColor = shapeEditorView.styleManager.fillColor
-            strokeColor = shapeEditorView.styleManager.strokeColor
-        }
+    private fun initShapeEditorController(
+        shapeEditorView: ShapeEditorView,
+        shapeInfoButtonView: ShapeInfoButtonView
+    ) {
+        shapeEditorController = ShapeEditorController(shapeEditorView, shapeInfoButtonView)
     }
+
+    private fun initShapeInfoButton(selectedShape: SelectedShape, shapeStyle: Style) =
+        findViewById<ShapeInfoButtonView>(R.id.btn_shape_info).apply {
+            init(100, 100, 15F)
+            setSelectedShape(selectedShape)
+            style = shapeStyle
+        }
+
 
     private fun initStrokeColorPickerDialog() {
         val colorSelectionListener = ColorPickerDialogFragment.ColorSelectionListener {
-            shapeEditorView.styleManager.strokeColor = it
-            btnShapeInfoInfo.strokeColor = it
+            shapeEditorController.setStrokeColor(it)
         }
 
-        val checkboxListener: (CompoundButton, Boolean) -> Unit = { btn, isChecked ->
+        val strokelessCheckboxListener: (CompoundButton, Boolean) -> Unit = { btn, isChecked ->
             try {
-                shapeEditorView.styleManager.hasStroke = isChecked
-                btnShapeInfoInfo.hasStroke = isChecked
+                shapeEditorController.isStrokeless(!isChecked)
             } catch (e: Exception) {
                 btn.isChecked = !isChecked
                 showStrokeAndFillWarning()
@@ -76,7 +77,7 @@ class MainActivity : AppCompatActivity() {
         strokeColorPickerDialog = ColorPickerDialogFragment(
             "Обведення",
             "Обведення",
-            checkboxListener,
+            strokelessCheckboxListener,
             colorSelectionListener,
         )
     }
@@ -91,30 +92,29 @@ class MainActivity : AppCompatActivity() {
 
     private fun initFillColorPickerDialog() {
         val colorSelectionListener = ColorPickerDialogFragment.ColorSelectionListener {
-            shapeEditorView.styleManager.fillColor = it
-            btnShapeInfoInfo.fillColor = it
+            shapeEditorController.setFillColor(it)
         }
 
-        val checkboxListener: (CompoundButton, Boolean) -> Unit = { btn, isChecked ->
-            try {
-                shapeEditorView.styleManager.hasFill = isChecked
-                btnShapeInfoInfo.hasFill = isChecked
-            } catch (e: Exception) {
-                btn.isChecked = !isChecked
-                showStrokeAndFillWarning()
+        val absoluteTransparentCheckboxListener: (CompoundButton, Boolean) -> Unit =
+            { btn, isChecked ->
+                try {
+                    shapeEditorController.isAbsoluteTransparent(!isChecked)
+                } catch (e: Exception) {
+                    btn.isChecked = !isChecked
+                    showStrokeAndFillWarning()
+                }
             }
-        }
 
         fillColorPickerDialog = ColorPickerDialogFragment(
             "Заповнення",
             "Заповненення",
-            checkboxListener,
+            absoluteTransparentCheckboxListener,
             colorSelectionListener
         )
     }
 
     private fun initStrokeColorPickerButton() {
-        btnStrokeColorPicker = findViewById<ImageButton>(R.id.btn_color_stroke).apply {
+        findViewById<ImageButton>(R.id.btn_color_stroke).apply {
             setOnClickListener {
                 strokeColorPickerDialog.show(supportFragmentManager, "strokeColorPickerDialog")
             }
@@ -122,21 +122,20 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initFillColorPickerButton() {
-        btnColorPicker = findViewById<ImageButton>(R.id.btn_fill_color).apply {
+        findViewById<ImageButton>(R.id.btn_fill_color).apply {
             setOnClickListener {
                 fillColorPickerDialog.show(supportFragmentManager, "colorPicker")
             }
         }
     }
 
-    private fun initPopupMenu() {
+    private fun initPopupMenu(btnShapes: ImageButton) {
         popupMenu = PopupMenu(this, btnShapes)
         popupMenu.inflate(R.menu.shape_menu)
         popupMenu.setOnMenuItemClickListener {
             it.isChecked = true
             val selectedShape = getSelectedShapeByMenuItemId(it.itemId)
-            shapeEditorView.selectedShape = selectedShape
-            btnShapeInfoInfo.setShapeType(selectedShape)
+            shapeEditorController.selectedShape = selectedShape
             true
         }
     }
@@ -149,10 +148,8 @@ class MainActivity : AppCompatActivity() {
         else -> throw RuntimeException("${itemId}: Does not exist corresponding shape")
     }
 
-    private fun initEditorView() {
-        shapeEditorView = findViewById<ShapeEditorView>(R.id.shape_editor).apply {
-            init(getMetrics())
-        }
+    private fun initEditorView() = findViewById<ShapeEditorView>(R.id.shape_editor).apply {
+        init(getMetrics())
     }
 
     /**
@@ -160,22 +157,20 @@ class MainActivity : AppCompatActivity() {
      * якщо натиснути і тримати, то зітруться всі об'екти.
      */
     private fun initClearButton() {
-        btnClear = findViewById<ImageButton>(R.id.btn_clear).apply {
+        findViewById<ImageButton>(R.id.btn_clear).apply {
             setOnClickListener {
-                shapeEditorView.clearLastShape()
+                shapeEditorController.clearLastShape()
             }
             setOnLongClickListener {
-                shapeEditorView.clearAllShapes()
+                shapeEditorController.clearAllShapes()
                 true
             }
         }
     }
 
-    private fun initShapeButton() {
-        btnShapes = findViewById<ImageButton>(R.id.btn_shapes).apply {
-            setOnClickListener {
-                popupMenu.show()
-            }
+    private fun initShapeButton() = findViewById<ImageButton>(R.id.btn_shapes).apply {
+        setOnClickListener {
+            popupMenu.show()
         }
     }
 

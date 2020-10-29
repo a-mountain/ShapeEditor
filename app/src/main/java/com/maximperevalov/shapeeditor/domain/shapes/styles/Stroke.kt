@@ -5,4 +5,4 @@ import com.maximperevalov.shapeeditor.domain.Color
 /**
  * Репрезентує - обведення.
  */
-data class Stroke(var width: Float, var color: Color)
+data class Stroke(val width: Float, val color: Color)

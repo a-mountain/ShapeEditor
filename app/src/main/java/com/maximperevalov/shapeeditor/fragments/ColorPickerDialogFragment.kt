@@ -9,6 +9,7 @@ import android.widget.CheckBox
 import android.widget.CompoundButton
 import android.widget.TextView
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.FragmentManager
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.maximperevalov.shapeeditor.R
 import com.maximperevalov.shapeeditor.domain.Color
@@ -44,6 +45,12 @@ class ColorPickerDialogFragment(
             findViewById(R.id.btn_purple),
             findViewById(R.id.btn_pink),
         ).forEachIndexed(::setColorButtonListener)
+    }
+
+    override fun show(manager: FragmentManager, tag: String?) {
+        if (!isAdded) {
+            super.show(manager, tag)
+        }
     }
 
     private fun setColorButtonListener(index: Int, button: FloatingActionButton) {
