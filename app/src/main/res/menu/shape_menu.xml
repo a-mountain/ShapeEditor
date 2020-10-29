@@ -18,6 +18,9 @@
         <item
             android:id="@+id/shape_circle_menu_item"
             android:title="@string/shape_circle" />
+        <item
+            android:id="@+id/shape_line_with_2circle"
+            android:title="@string/shape_line_with_2circle" />
     </group>
 
 </menu>

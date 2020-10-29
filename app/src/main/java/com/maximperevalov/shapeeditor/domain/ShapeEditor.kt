@@ -91,6 +91,7 @@ private class ShapeDrawingHandlerFactory(shapes: ArrayList<Shape>, style: Style)
     private val lineDrawingHandler = LineDrawingHandler(shapes, style)
     private val pointDrawingHandler = PointDrawingHandler(shapes, style)
     private val circleDrawerHandler = CircleDrawerHandler(shapes, style)
+    private val lineWithDoubleCircleDrawerHandler = LineWithDoubleCircleDrawerHandler(shapes, style)
 
     fun getShapeDrawingHandler(selectedShape: SelectedShape, style: Style) = when (selectedShape) {
         SelectedShape.RECTANGLE -> rectDrawingHandler
@@ -98,5 +99,6 @@ private class ShapeDrawingHandlerFactory(shapes: ArrayList<Shape>, style: Style)
         SelectedShape.LINE -> lineDrawingHandler
         SelectedShape.POINT -> pointDrawingHandler
         SelectedShape.CIRCLE -> circleDrawerHandler
+        SelectedShape.LINE_WITH_DOUBLE_CIRCLE -> lineWithDoubleCircleDrawerHandler
     }.apply { currentShapeStyle = style }
 }

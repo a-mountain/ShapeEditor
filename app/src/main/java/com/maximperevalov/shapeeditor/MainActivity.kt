@@ -145,6 +145,7 @@ class MainActivity : AppCompatActivity() {
         R.id.shape_ellipse_menu_item -> SelectedShape.ELLIPSE
         R.id.shape_line_menu_item -> SelectedShape.LINE
         R.id.shape_circle_menu_item -> SelectedShape.CIRCLE
+        R.id.shape_line_with_2circle -> SelectedShape.LINE_WITH_DOUBLE_CIRCLE
         else -> throw RuntimeException("${itemId}: Does not exist corresponding shape")
     }
 

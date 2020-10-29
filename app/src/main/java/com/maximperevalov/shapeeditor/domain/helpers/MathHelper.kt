@@ -39,3 +39,9 @@ operator fun Int.times(pointMath: PointMath) = pointMath * this
 operator fun Float.times(pointMath: PointMath) = pointMath * this
 
 fun vector(start: PointMath, end: PointMath) = PointMath(end.x - start.x, end.y - start.y)
+
+fun distance(x1: Float, x2: Float, y1: Float, y2: Float): Float {
+    val a = x2 - x1
+    val b = y2 - y1
+    return sqrt(a * a + b * b)
+}

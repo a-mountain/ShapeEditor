@@ -117,11 +117,22 @@ private class ShapeFactory(width: Float, height: Float, padding: Float, style: S
         style.withStrokeWidth(5F)
     )
 
+    private val lineWithDoubleCircle = LineWithDoubleCircle(
+        padding + 18,
+        padding + 18,
+        widthWithPadding - 18,
+        heightWithPadding - 18,
+        20F,
+        style.withStrokeWidth(3F)
+    )
+
+
     fun getShape(selectedShape: SelectedShape) = when (selectedShape) {
         SelectedShape.LINE -> line
         SelectedShape.ELLIPSE -> ellipse
         SelectedShape.POINT -> point
         SelectedShape.RECTANGLE -> rectangle
         SelectedShape.CIRCLE -> circle
+        SelectedShape.LINE_WITH_DOUBLE_CIRCLE -> lineWithDoubleCircle
     }
 }
