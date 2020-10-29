@@ -23,4 +23,6 @@ interface Drawer {
      * описаний навколо цього еліпа
      */
     fun drawEllipse(x: Float, y: Float, width: Float, height: Float, style: Style)
+
+    fun drawCircle(centerX: Float, centerY: Float, radius: Float, style: Style)
 }

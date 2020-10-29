@@ -8,10 +8,7 @@ import com.maximperevalov.shapeeditor.AndroidCanvasDrawer
 import com.maximperevalov.shapeeditor.domain.Color
 import com.maximperevalov.shapeeditor.domain.SelectedShape
 import com.maximperevalov.shapeeditor.domain.Shape
-import com.maximperevalov.shapeeditor.domain.shapes.Ellipse
-import com.maximperevalov.shapeeditor.domain.shapes.Line
-import com.maximperevalov.shapeeditor.domain.shapes.Point
-import com.maximperevalov.shapeeditor.domain.shapes.Rectangle
+import com.maximperevalov.shapeeditor.domain.shapes.*
 import com.maximperevalov.shapeeditor.domain.shapes.styles.Stroke
 import com.maximperevalov.shapeeditor.domain.shapes.styles.Style
 
@@ -101,9 +98,9 @@ private class ShapeFactory(width: Float, height: Float, padding: Float, style: S
     )
     private val ellipse =
         Ellipse(
+            padding + 10,
             padding,
-            padding,
-            widthWithPadding,
+            widthWithPadding - 10,
             heightWithPadding,
             style.withStrokeWidth(5F)
         )
@@ -113,10 +110,18 @@ private class ShapeFactory(width: Float, height: Float, padding: Float, style: S
         style.withStrokeWidth(7F),
     )
 
+    private val circle = Circle(
+        width / 2,
+        height / 2,
+        width / 2.5F,
+        style.withStrokeWidth(5F)
+    )
+
     fun getShape(selectedShape: SelectedShape) = when (selectedShape) {
         SelectedShape.LINE -> line
         SelectedShape.ELLIPSE -> ellipse
         SelectedShape.POINT -> point
         SelectedShape.RECTANGLE -> rectangle
+        SelectedShape.CIRCLE -> circle
     }
 }

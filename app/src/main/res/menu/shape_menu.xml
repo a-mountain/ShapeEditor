@@ -15,6 +15,9 @@
             android:checked="true"
             android:id="@+id/shape_ellipse_menu_item"
             android:title="@string/shape_ellipse" />
+        <item
+            android:id="@+id/shape_circle_menu_item"
+            android:title="@string/shape_circle" />
     </group>
 
 </menu>

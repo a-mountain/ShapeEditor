@@ -43,6 +43,16 @@ class AndroidCanvasDrawer(private val canvas: Canvas) : Drawer {
         drawShapeWithArea(style, drawFill, drawStroke)
     }
 
+    override fun drawCircle(centerX: Float, centerY: Float, radius: Float, style: Style) {
+        val drawFill: () -> Unit = {
+            canvas.drawCircle(centerX, centerY, radius, AndroidStyleMapper.getFillPaint(style))
+        }
+        val drawStroke: () -> Unit = {
+            canvas.drawCircle(centerX, centerY, radius, AndroidStyleMapper.getStrokePaint(style))
+        }
+        drawShapeWithArea(style, drawFill, drawStroke)
+    }
+
     private inline fun drawShapeWithArea(
         style: Style,
         drawFill: () -> Unit,

@@ -1,9 +1,6 @@
 package com.maximperevalov.shapeeditor.domain
 
-import com.maximperevalov.shapeeditor.domain.drawing.EllipseDrawingHandler
-import com.maximperevalov.shapeeditor.domain.drawing.LineDrawingHandler
-import com.maximperevalov.shapeeditor.domain.drawing.PointDrawingHandler
-import com.maximperevalov.shapeeditor.domain.drawing.RectangleDrawingHandler
+import com.maximperevalov.shapeeditor.domain.drawing.*
 import com.maximperevalov.shapeeditor.domain.shapes.Rectangle
 import com.maximperevalov.shapeeditor.domain.shapes.styles.Style
 
@@ -93,11 +90,13 @@ private class ShapeDrawingHandlerFactory(shapes: ArrayList<Shape>, style: Style)
     private val ellipseDrawingHandler = EllipseDrawingHandler(shapes, style)
     private val lineDrawingHandler = LineDrawingHandler(shapes, style)
     private val pointDrawingHandler = PointDrawingHandler(shapes, style)
+    private val circleDrawerHandler = CircleDrawerHandler(shapes, style)
 
     fun getShapeDrawingHandler(selectedShape: SelectedShape, style: Style) = when (selectedShape) {
         SelectedShape.RECTANGLE -> rectDrawingHandler
         SelectedShape.ELLIPSE -> ellipseDrawingHandler
         SelectedShape.LINE -> lineDrawingHandler
         SelectedShape.POINT -> pointDrawingHandler
+        SelectedShape.CIRCLE -> circleDrawerHandler
     }.apply { currentShapeStyle = style }
 }

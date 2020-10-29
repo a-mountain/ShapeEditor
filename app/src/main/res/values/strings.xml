@@ -5,6 +5,7 @@
     <string name="shape_line">Лінія</string>
     <string name="shape_rect">Прямокутник</string>
     <string name="shape_ellipse">Еліпс</string>
+    <string name="shape_circle">Коло</string>
     <string name="info">Довідка</string>
     <string name="file">Файл</string>
     <string name="btn_clear">Стерти</string>

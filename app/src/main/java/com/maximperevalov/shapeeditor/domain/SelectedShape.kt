@@ -8,4 +8,5 @@ enum class SelectedShape {
     LINE,
     RECTANGLE,
     ELLIPSE,
+    CIRCLE,
 }
