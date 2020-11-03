@@ -1,5 +1,7 @@
 package com.maximperevalov.shapeeditor.domain.helpers
 
+import kotlin.math.abs
+import kotlin.math.hypot
 import kotlin.math.sqrt
 
 /**
@@ -20,9 +22,9 @@ data class PointMath(val x: Float, val y: Float) {
     )
 
     fun distance(pointMath: PointMath): Float {
-        val a = this.x - pointMath.x
-        val b = this.y - pointMath.y
-        return sqrt(a * a + b * b)
+        val ac = abs(this.x - pointMath.x)
+        val cb = abs(this.y - pointMath.y)
+        return hypot(cb, ac)
     }
 
     operator fun plus(increment: PointMath) = PointMath(this.x + increment.x, this.y + increment.y)

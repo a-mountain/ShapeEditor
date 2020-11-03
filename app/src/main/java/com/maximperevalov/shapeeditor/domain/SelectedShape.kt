@@ -10,4 +10,5 @@ enum class SelectedShape {
     ELLIPSE,
     CIRCLE,
     LINE_WITH_DOUBLE_CIRCLE,
+    CUBE,
 }

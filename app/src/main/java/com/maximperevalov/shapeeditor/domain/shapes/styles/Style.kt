@@ -35,6 +35,8 @@ data class Style(
         )
     }
 
+    fun withStroke(stroke: Stroke) = this.copy(stroke = stroke)
+
     fun withIsStrokeless(isStrokeless: Boolean) = this.copy(isStrokeless = isStrokeless)
 
     fun withIsAbsoluteTransparent(isAbsoluteTransparent: Boolean) =

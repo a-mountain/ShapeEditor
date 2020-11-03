@@ -122,10 +122,17 @@ private class ShapeFactory(width: Float, height: Float, padding: Float, style: S
         padding + 18,
         widthWithPadding - 18,
         heightWithPadding - 18,
-        20F,
+        width / 5.0F,
         style.withStrokeWidth(3F)
     )
 
+    private val cube = Cube(
+        padding,
+        padding,
+        widthWithPadding,
+        heightWithPadding,
+        style,
+    )
 
     fun getShape(selectedShape: SelectedShape) = when (selectedShape) {
         SelectedShape.LINE -> line
@@ -134,5 +141,6 @@ private class ShapeFactory(width: Float, height: Float, padding: Float, style: S
         SelectedShape.RECTANGLE -> rectangle
         SelectedShape.CIRCLE -> circle
         SelectedShape.LINE_WITH_DOUBLE_CIRCLE -> lineWithDoubleCircle
+        SelectedShape.CUBE -> cube
     }
 }
