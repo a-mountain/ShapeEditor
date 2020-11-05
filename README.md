@@ -1,3 +1,3 @@
 # ShapeEditor
 
-Lab 2
+Maxim Perevalov OOP Labs
