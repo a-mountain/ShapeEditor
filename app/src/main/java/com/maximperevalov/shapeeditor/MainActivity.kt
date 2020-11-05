@@ -30,9 +30,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val shapeEditor = initEditorView()
-        val shapeInfoButton = initShapeInfoButton(shapeEditor.selectedShape, shapeEditor.shapeStyle)
-        initShapeEditorController(shapeEditor, shapeInfoButton)
+        val shapeEditorView = createEditorView()
+        val shapeInfoButton =
+            initShapeInfoButton(shapeEditorView.selectedShape, shapeEditorView.shapeStyle)
+        initShapeEditorController(shapeEditorView, shapeInfoButton)
         initClearButton()
 
         val shapesButton = initShapeButton()
@@ -150,7 +151,7 @@ class MainActivity : AppCompatActivity() {
         else -> throw RuntimeException("${itemId}: Does not exist corresponding shape")
     }
 
-    private fun initEditorView() = findViewById<ShapeEditorView>(R.id.shape_editor).apply {
+    private fun createEditorView() = findViewById<ShapeEditorView>(R.id.shape_editor).apply {
         init(getMetrics())
     }
 
