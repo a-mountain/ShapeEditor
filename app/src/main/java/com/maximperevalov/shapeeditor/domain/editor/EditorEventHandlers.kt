@@ -1,5 +1,6 @@
 package com.maximperevalov.shapeeditor.domain.editor
 
+import com.maximperevalov.shapeeditor.domain.events.EditorEvent
 import com.maximperevalov.shapeeditor.domain.events.EditorEventHandler
 import java.util.*
 import kotlin.collections.ArrayList

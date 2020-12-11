@@ -1,6 +1,7 @@
 package com.maximperevalov.shapeeditor.domain.editor
 
 import com.maximperevalov.shapeeditor.domain.*
+import com.maximperevalov.shapeeditor.domain.events.EditorEvent
 import com.maximperevalov.shapeeditor.domain.events.EditorEventHandler
 import com.maximperevalov.shapeeditor.domain.shapes.Rectangle
 import com.maximperevalov.shapeeditor.domain.shapes.styles.DEFAULT_STYLE

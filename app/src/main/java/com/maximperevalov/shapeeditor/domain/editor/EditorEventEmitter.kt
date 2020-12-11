@@ -1,10 +1,7 @@
 package com.maximperevalov.shapeeditor.domain.editor
 
 import com.maximperevalov.shapeeditor.domain.Shape
-import com.maximperevalov.shapeeditor.domain.events.ClearShapesEventHandler
-import com.maximperevalov.shapeeditor.domain.events.DrawNewShapeEventHandler
-import com.maximperevalov.shapeeditor.domain.events.EditorEventHandler
-import com.maximperevalov.shapeeditor.domain.events.RemoveShapeEventHandler
+import com.maximperevalov.shapeeditor.domain.events.*
 
 class EditorEventEmitter(private val handlers: EditorEventHandlers) {
 

@@ -9,9 +9,9 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.maximperevalov.shapeeditor.domain.SelectedShape
 import com.maximperevalov.shapeeditor.domain.Shape
-import com.maximperevalov.shapeeditor.domain.editor.EditorEvent
 import com.maximperevalov.shapeeditor.domain.events.ClearShapesEventHandler
 import com.maximperevalov.shapeeditor.domain.events.DrawNewShapeEventHandler
+import com.maximperevalov.shapeeditor.domain.events.EditorEvent
 import com.maximperevalov.shapeeditor.domain.events.RemoveShapeEventHandler
 import com.maximperevalov.shapeeditor.domain.shapes.*
 import com.maximperevalov.shapeeditor.domain.shapes.styles.Style
@@ -142,7 +142,8 @@ class MainActivity : AppCompatActivity() {
                 }
             })
 
-        shapeEditorController.addEventHandler(EditorEvent.ClearShapes,
+        shapeEditorController.addEventHandler(
+            EditorEvent.ClearShapes,
             object : ClearShapesEventHandler {
                 override fun onClearShapes() {
                     table.clearShapes()

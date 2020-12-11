@@ -2,7 +2,7 @@ package com.maximperevalov.shapeeditor
 
 import com.maximperevalov.shapeeditor.domain.Color
 import com.maximperevalov.shapeeditor.domain.SelectedShape
-import com.maximperevalov.shapeeditor.domain.editor.EditorEvent
+import com.maximperevalov.shapeeditor.domain.events.EditorEvent
 import com.maximperevalov.shapeeditor.domain.events.EditorEventHandler
 import com.maximperevalov.shapeeditor.domain.shapes.styles.Style
 import com.maximperevalov.shapeeditor.table.ShapeTable

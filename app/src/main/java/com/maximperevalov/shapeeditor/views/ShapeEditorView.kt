@@ -10,8 +10,8 @@ import android.view.MotionEvent
 import android.view.View
 import com.maximperevalov.shapeeditor.AndroidCanvasDrawer
 import com.maximperevalov.shapeeditor.AndroidStorage
-import com.maximperevalov.shapeeditor.domain.editor.EditorEvent
 import com.maximperevalov.shapeeditor.domain.editor.ShapeEditor
+import com.maximperevalov.shapeeditor.domain.events.EditorEvent
 import com.maximperevalov.shapeeditor.domain.events.EditorEventHandler
 import java.io.File
 
