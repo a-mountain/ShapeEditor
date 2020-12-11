@@ -51,6 +51,7 @@ class ShapeEditor {
         clearAllShapes()
         storage.getAllSavedShapes().forEach {
             shapes.add(it)
+            eventEmitter.emitDrawNewShapeEvent(it)
         }
     }
 

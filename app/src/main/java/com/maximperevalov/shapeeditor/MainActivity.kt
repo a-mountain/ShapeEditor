@@ -147,7 +147,6 @@ class MainActivity : AppCompatActivity() {
                 override fun onClearShapes() {
                     table.clearShapes()
                 }
-
             })
 
         shapeInfoBtn.setOnClickListener {

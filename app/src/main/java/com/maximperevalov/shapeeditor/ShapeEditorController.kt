@@ -34,6 +34,7 @@ class ShapeEditorController(
 
     fun setShapesFromStorage() {
         shapeEditor.setShapesFromStorage()
+        shapeEditorView.invalidate()
     }
 
     fun saveShapesToStorage() {

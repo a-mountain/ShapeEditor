@@ -11,7 +11,7 @@ class LineWithDoubleCircle(
     startY: Float,
     endX: Float,
     endY: Float,
-    radius: Float,
+    radius: Float = 100F,
     style: Style
 ) : Shape(style) {
 
@@ -46,7 +46,7 @@ class LineWithDoubleCircle(
             isNeedLineReposition = true
         }
 
-    var startY: Float = startX
+    var startY: Float = startY
         set(value) {
             field = value
             connectionLine.startY = value
@@ -54,7 +54,7 @@ class LineWithDoubleCircle(
             isNeedLineReposition = true
         }
 
-    var endX: Float = startX
+    var endX: Float = endX
         set(value) {
             field = value
             connectionLine.endX = value
@@ -62,7 +62,7 @@ class LineWithDoubleCircle(
             isNeedLineReposition = true
         }
 
-    var endY: Float = startX
+    var endY: Float = endY
         set(value) {
             field = value
             connectionLine.endY = value

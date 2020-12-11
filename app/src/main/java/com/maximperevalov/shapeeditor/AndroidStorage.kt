@@ -4,7 +4,6 @@ import android.util.Log
 import com.maximperevalov.shapeeditor.domain.Color
 import com.maximperevalov.shapeeditor.domain.Shape
 import com.maximperevalov.shapeeditor.domain.Storage
-import com.maximperevalov.shapeeditor.domain.helpers.distance
 import com.maximperevalov.shapeeditor.domain.shapes.*
 import com.maximperevalov.shapeeditor.domain.shapes.styles.Stroke
 import com.maximperevalov.shapeeditor.domain.shapes.styles.Style
@@ -13,130 +12,38 @@ import java.io.File
 class AndroidStorage(private val file: File) : Storage {
 
     override fun saveShapes(shapes: List<Shape>) {
-        file.bufferedWriter().write("")
+        file.writeText("")
         shapes.forEach {
-            val str = (shapeToString(it))
-            Log.d("AndroidStorage", str)
-            file.bufferedWriter().appendLine(str)
+            val str = (serializeShape(it))
+            file.appendText(str)
+//            Log.d("AndroidStorage", str)
+            file.appendText("\n")
         }
     }
 
-    override fun getAllSavedShapes() = file.readLines().map { getShapeFromString(it) }
-
-    private fun shapeToString(shape: Shape): String {
-        var type = ""
-        var x1 = 0F
-        var y1 = 0F
-        var x2 = 0F
-        var y2 = 0F
-        val style = styleToString(shape.style)
-        when (shape) {
-            is Circle -> {
-                type = "Circle"
-                x1 = shape.centerX
-                y1 = shape.centerY
-                x2 = shape.centerY + shape.radius
-                y2 = shape.centerY + shape.radius
-            }
-            is Cube -> {
-                type = "Cube"
-                x1 = shape.x1
-                y1 = shape.y1
-                x2 = shape.x2
-                y2 = shape.y2
-            }
-            is Ellipse -> {
-                type = "Ellipse"
-                x1 = shape.x
-                y1 = shape.y
-                x2 = shape.x + shape.width
-                y2 = shape.x + shape.height
-            }
-            is Line -> {
-                type = "Line"
-                x1 = shape.startX
-                y1 = shape.startY
-                x2 = shape.endX
-                y2 = shape.endY
-            }
-            is LineWithDoubleCircle -> {
-                type = "LineWithDoubleCircle"
-                x1 = shape.startX
-                y1 = shape.startY
-                x2 = shape.endX
-                y2 = shape.endY
-            }
-            is Point -> {
-                type = "Point"
-                x1 = shape.x
-                y1 = shape.y
-                x2 = shape.x
-                y2 = shape.y
-            }
-            is Rectangle -> {
-                type = "Rectangle"
-                x1 = shape.x
-                y1 = shape.y
-                x2 = shape.x + shape.width
-                y2 = shape.x + shape.height
-            }
-
-        }
-        return buildString {
-            append(type)
-            append("\t")
-            append(x1)
-            append("\t")
-            append(y1)
-            append("\t")
-            append(x2)
-            append("\t")
-            append(y2)
-            append("\t")
-            append(style)
-        }
+    override fun getAllSavedShapes(): List<Shape> {
+        val lines = file.readLines()
+        Log.d("AndroidStorage", "Lines: $lines")
+        return lines.map { deserializeShape(it) }
     }
 
-    private fun styleToString(style: Style) = buildString {
-        append(style.isAbsoluteTransparent)
-        append("\t")
-        append(style.isStrokeless)
-        append("\t")
-        append(style.fillColor.toString())
-        append("\t")
-        append(style.stroke.hasDash)
-        append("\t")
-        append(style.stroke.color.toString())
-        append("\t")
-        append(style.stroke.width)
-    }
+    private fun deserializeStyle(style: Style) = listOf(
+        style.isAbsoluteTransparent,
+        style.isStrokeless,
+        style.fillColor,
+        style.stroke.hasDash,
+        style.stroke.color,
+        style.stroke.width
+    ).serizlise()
 
-    private fun getShapeFromString(stringShape: String): Shape {
-        val properties = stringShape.split("\t")
-        val type = properties[0]
-        val x1 = properties[1].toFloat()
-        val y1 = properties[2].toFloat()
-        val x2 = properties[3].toFloat()
-        val y2 = properties[4].toFloat()
-        val style = getStyleFromString(properties)
-        return when (type) {
-            "Circle" -> Circle(x1, y1, distance(x1, y1, x2, y2), style)
-            "Cube" -> Cube(x1, y1, x2, y2, style)
-            "Ellipse" -> Ellipse(x1, y1, x2 - x1, y2 - y1, style)
-            "Line" -> Line(x1, y1, x2, y2, style)
-            "LineWithDoubleCircle" -> LineWithDoubleCircle(x1, y1, x2, y2, 100F, style)
-            "Point" -> Point(x1, y1, style)
-            else -> Rectangle(x1, y1, x2 - x1, y2 - y1, style)
-        }
-    }
 
-    private fun getStyleFromString(properties: List<String>): Style {
-        val isAbsoluteTransparent = properties[5]
-        val isStrokeless = properties[6]
-        val fillColor = properties[7]
-        val strokeHasDash = properties[8]
-        val strokeColor = properties[9]
-        val strokeWidth = properties[10]
+    private fun serializeStyle(props: List<String>, offset: Int): Style {
+        val isAbsoluteTransparent = props[offset]
+        val isStrokeless = props[offset + 1]
+        val fillColor = props[offset + 2]
+        val strokeHasDash = props[offset + 3]
+        val strokeColor = props[offset + 4]
+        val strokeWidth = props[offset + 5]
         return Style(
             getColorFromString(fillColor),
             Stroke(
@@ -147,6 +54,141 @@ class AndroidStorage(private val file: File) : Storage {
             isAbsoluteTransparent.toBoolean(),
             isStrokeless.toBoolean()
         )
+    }
+
+    private fun serializeShape(shape: Shape): String {
+        val style = deserializeStyle(shape.style)
+        val props = ArrayList<Any>()
+        when (shape) {
+            is Circle -> {
+                with(props) {
+                    add("Circle")
+                    add(shape.centerX)
+                    add(shape.centerY)
+                    add(shape.radius)
+                }
+            }
+            is Cube -> {
+                with(props) {
+                    add("Cube")
+                    add(shape.x1)
+                    add(shape.y1)
+                    add(shape.x2)
+                    add(shape.y2)
+
+                }
+            }
+            is Ellipse -> {
+                with(props) {
+                    add("Ellipse")
+                    add(shape.x)
+                    add(shape.y)
+                    add(shape.width)
+                    add(shape.height)
+                }
+            }
+            is Line -> {
+                with(props) {
+                    add("Line")
+                    add(shape.startX)
+                    add(shape.startY)
+                    add(shape.endX)
+                    add(shape.endY)
+                }
+            }
+            is LineWithDoubleCircle -> {
+                with(props) {
+                    add("LineWithDoubleCircle")
+                    add(shape.startX)
+                    add(shape.startY)
+                    add(shape.endX)
+                    add(shape.endY)
+                    add(shape.radius)
+                }
+            }
+            is Point -> {
+                with(props) {
+                    add("Point")
+                    add(shape.x)
+                    add(shape.y)
+                }
+            }
+            is Rectangle -> {
+                with(props) {
+                    add("Rectangle")
+                    add(shape.x)
+                    add(shape.y)
+                    add(shape.width)
+                    add(shape.height)
+                }
+            }
+
+        }
+        props.add(style)
+        Log.d("AndroidStorage", "ser Shape: ${props.serizlise()}")
+        return props.serizlise()
+    }
+
+    private fun deserializeShape(string: String): Shape {
+        val props = string.split("\t")
+        Log.d("AndroidStorage", "des Shape: $props")
+        return when (props[0]) {
+            "Circle" -> {
+                val centerX = props[1].toFloat()
+                val centerY = props[2].toFloat()
+                val radius = props[3].toFloat()
+                val style = serializeStyle(props, 4)
+                Circle(centerX, centerY, radius, style)
+            }
+            "Cube" -> {
+                val x1 = props[1].toFloat()
+                val y1 = props[2].toFloat()
+                val x2 = props[3].toFloat()
+                val y2 = props[4].toFloat()
+                val style = serializeStyle(props, 5)
+                Cube(x1, y1, x2, y2, style)
+            }
+            "Ellipse" -> {
+                val x = props[1].toFloat()
+                val y = props[2].toFloat()
+                val width = props[3].toFloat()
+                val height = props[4].toFloat()
+                val style = serializeStyle(props, 5)
+                Ellipse(x, y, width, height, style)
+            }
+            "Line" -> {
+                val startX = props[1].toFloat()
+                val startY = props[2].toFloat()
+                val endX = props[3].toFloat()
+                val endY = props[4].toFloat()
+                val style = serializeStyle(props, 5)
+                Line(startX, startY, endX, endY, style)
+            }
+            "LineWithDoubleCircle" -> {
+                val startX = props[1].toFloat()
+                val startY = props[2].toFloat()
+                val endX = props[3].toFloat()
+                val endY = props[4].toFloat()
+                val radius = props[5].toFloat()
+                val style = serializeStyle(props, 6)
+                LineWithDoubleCircle(startX, startY, endX, endY, radius, style)
+            }
+            "Point" -> {
+                val x = props[1].toFloat()
+                val y = props[2].toFloat()
+                val style = serializeStyle(props, 3)
+                Point(x, y, style)
+            }
+            "Rectangle" -> {
+                val x = props[1].toFloat()
+                val y = props[2].toFloat()
+                val width = props[3].toFloat()
+                val height = props[4].toFloat()
+                val style = serializeStyle(props, 5)
+                Rectangle(x, y, width, height, style)
+            }
+            else -> throw RuntimeException("Can't deserialize shape: $props")
+        }
     }
 
     private fun getColorFromString(string: String) = when (string) {
@@ -161,5 +203,7 @@ class AndroidStorage(private val file: File) : Storage {
         "PURPLE" -> Color.PURPLE
         else -> Color.PINK
     }
+
+    private fun List<Any>.serizlise() = joinToString(separator = "\t") { it.toString() }
 }
 

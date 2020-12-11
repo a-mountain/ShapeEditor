@@ -8,7 +8,7 @@ import kotlin.math.sqrt
 
 class Cube(x1: Float, y1: Float, x2: Float, y2: Float, style: Style) :
     Shape(Style.createAbsoluteTransparentStyle(style.stroke)) {
-    
+
     var y1 = y1
         set(value) {
             field = value
@@ -110,6 +110,7 @@ class Cube(x1: Float, y1: Float, x2: Float, y2: Float, style: Style) :
     override var style: Style
         get() = super.style
         set(value) {
+            super.style = super.style.withStroke(value.stroke)
             frontRect.style = frontRect.style.withStroke(value.stroke)
             backRect.style = backRect.style.withStroke(value.stroke)
             leftBotLine.style = leftBotLine.style.withStroke(value.stroke)

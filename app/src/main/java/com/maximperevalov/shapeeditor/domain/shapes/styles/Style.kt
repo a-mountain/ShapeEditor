@@ -4,8 +4,7 @@ import com.maximperevalov.shapeeditor.domain.Color
 
 val DEFAULT_SELECTION_COLOR = Color.BLACK
 const val DEFAULT_STROKE_WIDTH = 5F
-val DEFAULT_STYLE =
-    Style(Color.PURPLE, Stroke(DEFAULT_STROKE_WIDTH, Color.ORANGE))
+val DEFAULT_STYLE = Style(Color.PURPLE, Stroke(DEFAULT_STROKE_WIDTH, Color.ORANGE))
 
 /**
  * Містить, "космітичні" атрибути фігур, такі як: колір, обедення

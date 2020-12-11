@@ -34,7 +34,6 @@ class LineWithDoubleCircleDrawerHandler(style: Style, shapes: ArrayList<Shape>) 
             y,
             x,
             y,
-            100F,
-            Style.createAbsoluteTransparentStyle(Stroke(6F, DEFAULT_SELECTION_COLOR))
+            style = Style.createAbsoluteTransparentStyle(Stroke(6F, DEFAULT_SELECTION_COLOR))
         )
 }

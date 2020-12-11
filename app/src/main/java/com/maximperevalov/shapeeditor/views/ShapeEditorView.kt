@@ -9,11 +9,11 @@ import android.util.DisplayMetrics
 import android.view.MotionEvent
 import android.view.View
 import com.maximperevalov.shapeeditor.AndroidCanvasDrawer
-import com.maximperevalov.shapeeditor.domain.Shape
-import com.maximperevalov.shapeeditor.domain.Storage
+import com.maximperevalov.shapeeditor.AndroidStorage
 import com.maximperevalov.shapeeditor.domain.editor.EditorEvent
 import com.maximperevalov.shapeeditor.domain.editor.ShapeEditor
 import com.maximperevalov.shapeeditor.domain.events.EditorEventHandler
+import java.io.File
 
 /**
  * Графічне представлення полотна, для малювання фігури.
@@ -43,20 +43,15 @@ class ShapeEditorView : View {
 
         val drawer = AndroidCanvasDrawer(canvas)
         shapeEditor = ShapeEditor.getInstance()
+        val file = File(context.filesDir, "shapes")
+        if (!file.exists()) {
+            file.createNewFile()
+        }
         shapeEditor.init(
             bitmap.width,
             bitmap.height,
             drawer,
-            object : Storage {
-                override fun saveShapes(shapes: List<Shape>) {
-
-                }
-
-                override fun getAllSavedShapes(): List<Shape> {
-                    return emptyList()
-                }
-
-            }
+            AndroidStorage(file)
         )
     }
 
