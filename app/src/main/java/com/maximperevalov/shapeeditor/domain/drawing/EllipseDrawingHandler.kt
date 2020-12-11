@@ -2,6 +2,7 @@ package com.maximperevalov.shapeeditor.domain.drawing
 
 import com.maximperevalov.shapeeditor.domain.Shape
 import com.maximperevalov.shapeeditor.domain.ShapeDrawingHandler
+import com.maximperevalov.shapeeditor.domain.editor.ShapeEditor
 import com.maximperevalov.shapeeditor.domain.helpers.PointMath
 import com.maximperevalov.shapeeditor.domain.helpers.vector
 import com.maximperevalov.shapeeditor.domain.shapes.Ellipse
@@ -14,11 +15,11 @@ import com.maximperevalov.shapeeditor.domain.shapes.styles.Style
  * Керує процесом малювання еліпса.
  * Еліпс малюється від центру до одного з кутів охоплюючого прямокутника.
  */
-class EllipseDrawingHandler(private val shapes: ArrayList<Shape>, style: Style) :
-    ShapeDrawingHandler(style) {
+class EllipseDrawingHandler(style: Style, shapes: ArrayList<Shape>) :
+    ShapeDrawingHandler(style, shapes) {
 
-    private var ellipse: Ellipse? = null
-    private var centerPoint: Point? = null
+    private lateinit var ellipse: Ellipse
+    private lateinit var centerPoint: Point
 
     private var centerX: Float = 0F
     private var centerY: Float = 0F
@@ -30,12 +31,12 @@ class EllipseDrawingHandler(private val shapes: ArrayList<Shape>, style: Style) 
         centerPoint = createCenterPoint(firstX, firstY)
         ellipse = createSelectionEllipse(firstX, firstY)
 
-        shapes.add(ellipse!!)
-        shapes.add(centerPoint!!)
+        addShape(ellipse)
+        addShape(this.centerPoint)
     }
 
     override fun onMove(newX: Float, newY: Float) {
-        ellipse?.apply {
+        ellipse.apply {
             val oppositeCorner = calcOppositeRectCorner(newX, newY, centerX, centerY)
 
             x = oppositeCorner.x
@@ -47,12 +48,9 @@ class EllipseDrawingHandler(private val shapes: ArrayList<Shape>, style: Style) 
     }
 
     override fun onLastTouch(lastX: Float, lastY: Float) {
-        shapes.remove(centerPoint!!)
-        makeEllipseReal()
-    }
-
-    private fun makeEllipseReal() {
-        ellipse?.style = currentShapeStyle.copy()
+        removeShape(centerPoint)
+        applyStyle(ellipse)
+        ShapeEditor.getInstance().eventEmitter.emitDrawNewShapeEvent(ellipse)
     }
 
     private fun calcOppositeRectCorner(

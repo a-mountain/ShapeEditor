@@ -17,9 +17,15 @@ data class Style(
     val isStrokeless: Boolean,
 ) {
 
+    init {
+        if (isStrokeless && isAbsoluteTransparent)
+            throw RuntimeException("Style can't be strokeless and absolute transparent at the same time")
+    }
+
     constructor(fillColor: Color, stroke: Stroke) : this(fillColor, stroke, false, false)
 
     companion object {
+
         fun createAbsoluteTransparentStyle(stroke: Stroke) = Style(
             DEFAULT_STYLE.fillColor,
             stroke,
@@ -45,6 +51,8 @@ data class Style(
     fun withStrokeWidth(width: Float) = this.copy(stroke = this.stroke.copy(width = width))
 
     fun withStrokeColor(color: Color) = this.copy(stroke = this.stroke.copy(color = color))
+
+    fun withDash(hasDash: Boolean) = this.copy(stroke = this.stroke.copy(hasDash = hasDash))
 
     fun withFillColor(color: Color) = this.copy(fillColor = color)
 }

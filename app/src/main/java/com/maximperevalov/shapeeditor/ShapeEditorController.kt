@@ -2,53 +2,87 @@ package com.maximperevalov.shapeeditor
 
 import com.maximperevalov.shapeeditor.domain.Color
 import com.maximperevalov.shapeeditor.domain.SelectedShape
+import com.maximperevalov.shapeeditor.domain.editor.EditorEvent
+import com.maximperevalov.shapeeditor.domain.events.EditorEventHandler
 import com.maximperevalov.shapeeditor.domain.shapes.styles.Style
+import com.maximperevalov.shapeeditor.table.ShapeTable
 import com.maximperevalov.shapeeditor.views.ShapeEditorView
 import com.maximperevalov.shapeeditor.views.ShapeInfoButtonView
 
 class ShapeEditorController(
     private val shapeEditorView: ShapeEditorView,
     private val shapeInfoButtonView: ShapeInfoButtonView,
+    private val shapeTable: ShapeTable,
 ) {
 
-    private var style: Style
-        get() = shapeEditorView.shapeStyle
-        set(value) {
-            if (value.isStrokeless && value.isAbsoluteTransparent)
-                throw RuntimeException("Style can't be strokeless and absolute transparent at the same time")
-
-            shapeInfoButtonView.style = value
-            shapeEditorView.shapeStyle = value
-        }
-
     var selectedShape: SelectedShape
-        get() = shapeEditorView.selectedShape
+        get() = shapeEditor.selectedShape
         set(value) {
             shapeInfoButtonView.setSelectedShape(value)
-            shapeEditorView.selectedShape = value
+            shapeEditor.selectedShape = value
+            shapeEditorView.invalidate()
         }
 
+    private var drawStyle: Style
+        get() = shapeEditor.currentShapeStyle
+        set(value) {
+            shapeInfoButtonView.style = value
+            shapeEditor.currentShapeStyle = value
+        }
+
+    private val shapeEditor = shapeEditorView.shapeEditor
+
+    fun setShapesFromStorage() {
+        shapeEditor.setShapesFromStorage()
+    }
+
+    fun saveShapesToStorage() {
+        shapeEditor.saveShapes()
+    }
+
+    fun addEventHandler(event: EditorEvent, eventHandler: EditorEventHandler) {
+        shapeEditorView.addEventHandler(event, eventHandler)
+    }
+
+    fun selectShape(hashCode: Int) {
+        shapeEditor.getShapeByHashCode(hashCode)?.let { shapeEditor.selectShape(it) }
+    }
+
+    fun removeSelection() {
+        shapeEditor.removeSelection()
+    }
+
+    fun removeShapeByHashCode(hashCode: Int) {
+        shapeEditor.getShapeByHashCode(hashCode)?.let { shapeEditor.clearShape(it) }
+    }
+
     fun setStrokeColor(strokeColor: Color) {
-        style = style.withStrokeColor(strokeColor)
+        drawStyle = drawStyle.withStrokeColor(strokeColor)
     }
 
     fun setFillColor(fillColor: Color) {
-        style = style.withFillColor(fillColor)
+        drawStyle = drawStyle.withFillColor(fillColor)
     }
 
     fun isStrokeless(isStrokeless: Boolean) {
-        style = style.withIsStrokeless(isStrokeless)
+        drawStyle = drawStyle.withIsStrokeless(isStrokeless)
     }
 
     fun isAbsoluteTransparent(isAbsoluteTransparent: Boolean) {
-        style = style.withIsAbsoluteTransparent(isAbsoluteTransparent)
+        drawStyle = drawStyle.withIsAbsoluteTransparent(isAbsoluteTransparent)
     }
 
     fun clearAllShapes() {
-        shapeEditorView.clearAllShapes()
+        shapeEditor.clearAllShapes()
+        shapeEditorView.invalidate()
     }
 
     fun clearLastShape() {
-        shapeEditorView.clearLastShape()
+        shapeEditor.clearLastShape()
+        shapeEditorView.invalidate()
+    }
+
+    fun requestRender() {
+        shapeEditorView.invalidate()
     }
 }

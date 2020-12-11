@@ -9,9 +9,11 @@ import android.util.DisplayMetrics
 import android.view.MotionEvent
 import android.view.View
 import com.maximperevalov.shapeeditor.AndroidCanvasDrawer
-import com.maximperevalov.shapeeditor.domain.SelectedShape
-import com.maximperevalov.shapeeditor.domain.ShapeEditor
-import com.maximperevalov.shapeeditor.domain.shapes.styles.Style
+import com.maximperevalov.shapeeditor.domain.Shape
+import com.maximperevalov.shapeeditor.domain.Storage
+import com.maximperevalov.shapeeditor.domain.editor.EditorEvent
+import com.maximperevalov.shapeeditor.domain.editor.ShapeEditor
+import com.maximperevalov.shapeeditor.domain.events.EditorEventHandler
 
 /**
  * Графічне представлення полотна, для малювання фігури.
@@ -21,24 +23,15 @@ class ShapeEditorView : View {
     private val bitmapPaint = Paint()
     private lateinit var bitmap: Bitmap
 
-    private lateinit var shapeEditor: ShapeEditor
-
-    var shapeStyle: Style
-        get() = shapeEditor.currentShapeStyle
-        set(value) {
-            shapeEditor.currentShapeStyle = value
-        }
-
-    var selectedShape: SelectedShape
-        get() = shapeEditor.selectedShape
-        set(value) {
-            shapeEditor.selectedShape = value
-            invalidate()
-        }
+    lateinit var shapeEditor: ShapeEditor
 
     constructor(context: Context, attributeSet: AttributeSet) : super(context, attributeSet)
 
     constructor(context: Context) : super(context)
+
+    fun addEventHandler(event: EditorEvent, eventHandler: EditorEventHandler) {
+        shapeEditor.addEventHandler(event, eventHandler)
+    }
 
     fun init(metrics: DisplayMetrics) {
 
@@ -49,7 +42,22 @@ class ShapeEditorView : View {
         val canvas = Canvas(bitmap)
 
         val drawer = AndroidCanvasDrawer(canvas)
-        shapeEditor = ShapeEditor(bitmap.width, bitmap.height, drawer)
+        shapeEditor = ShapeEditor.getInstance()
+        shapeEditor.init(
+            bitmap.width,
+            bitmap.height,
+            drawer,
+            object : Storage {
+                override fun saveShapes(shapes: List<Shape>) {
+
+                }
+
+                override fun getAllSavedShapes(): List<Shape> {
+                    return emptyList()
+                }
+
+            }
+        )
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -57,16 +65,6 @@ class ShapeEditorView : View {
         canvas.save()
         canvas.drawBitmap(bitmap, 0F, 0F, bitmapPaint)
         canvas.restore()
-    }
-
-    fun clearLastShape() {
-        shapeEditor.clearLastShape()
-        invalidate()
-    }
-
-    fun clearAllShapes() {
-        shapeEditor.clearAllShapes()
-        invalidate()
     }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {

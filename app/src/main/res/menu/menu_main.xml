@@ -6,4 +6,10 @@
     <item
         android:id="@+id/info_menu_item"
         android:title="@string/info" />
+    <item
+        android:id="@+id/miSave"
+        android:title="Зберігти" />
+    <item
+        android:id="@+id/miStorage"
+        android:title="Відновити" />
 </menu>

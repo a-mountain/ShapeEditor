@@ -2,6 +2,7 @@ package com.maximperevalov.shapeeditor.domain.drawing
 
 import com.maximperevalov.shapeeditor.domain.Shape
 import com.maximperevalov.shapeeditor.domain.ShapeDrawingHandler
+import com.maximperevalov.shapeeditor.domain.editor.ShapeEditor
 import com.maximperevalov.shapeeditor.domain.shapes.Line
 import com.maximperevalov.shapeeditor.domain.shapes.styles.DEFAULT_SELECTION_COLOR
 import com.maximperevalov.shapeeditor.domain.shapes.styles.Style
@@ -9,29 +10,26 @@ import com.maximperevalov.shapeeditor.domain.shapes.styles.Style
 /**
  *  Керує процесом малювання лінії
  */
-class LineDrawingHandler(private val shapes: ArrayList<Shape>, style: Style) :
-    ShapeDrawingHandler(style) {
+class LineDrawingHandler(style: Style, shapes: ArrayList<Shape>) :
+    ShapeDrawingHandler(style, shapes) {
 
-    private var line: Line? = null
+    private lateinit var line: Line
 
     override fun onFirstTouch(firstX: Float, firstY: Float) {
         line = createSelectionLine(firstX, firstY)
-        shapes.add(line!!)
+        addShape(line)
     }
 
     override fun onMove(newX: Float, newY: Float) {
-        line?.apply {
+        line.apply {
             endX = newX
             endY = newY
         }
     }
 
     override fun onLastTouch(lastX: Float, lastY: Float) {
-        makeLineReal()
-    }
-
-    private fun makeLineReal() {
-        line?.style = currentShapeStyle.copy()
+        applyStyle(line)
+        ShapeEditor.getInstance().eventEmitter.emitDrawNewShapeEvent(line)
     }
 
     private fun createSelectionLine(x: Float, y: Float) =

@@ -3,14 +3,20 @@ package com.maximperevalov.shapeeditor
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.view.Menu
-import android.widget.CompoundButton
-import android.widget.ImageButton
-import android.widget.PopupMenu
-import android.widget.Toast
+import android.view.MenuItem
+import android.view.View
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.maximperevalov.shapeeditor.domain.SelectedShape
+import com.maximperevalov.shapeeditor.domain.Shape
+import com.maximperevalov.shapeeditor.domain.editor.EditorEvent
+import com.maximperevalov.shapeeditor.domain.events.ClearShapesEventHandler
+import com.maximperevalov.shapeeditor.domain.events.DrawNewShapeEventHandler
+import com.maximperevalov.shapeeditor.domain.events.RemoveShapeEventHandler
+import com.maximperevalov.shapeeditor.domain.shapes.*
 import com.maximperevalov.shapeeditor.domain.shapes.styles.Style
 import com.maximperevalov.shapeeditor.fragments.ColorPickerDialogFragment
+import com.maximperevalov.shapeeditor.table.ShapeTable
 import com.maximperevalov.shapeeditor.views.ShapeEditorView
 import com.maximperevalov.shapeeditor.views.ShapeInfoButtonView
 
@@ -25,15 +31,24 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var fillColorPickerDialog: ColorPickerDialogFragment
     private lateinit var strokeColorPickerDialog: ColorPickerDialogFragment
+    private lateinit var table: ShapeTable
+    private lateinit var layout: LinearLayout
+
+    private var isTableVisible = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        table = findViewById(R.id.shape_table)
         val shapeEditorView = createEditorView()
         val shapeInfoButton =
-            initShapeInfoButton(shapeEditorView.selectedShape, shapeEditorView.shapeStyle)
+            initShapeInfoButton(
+                shapeEditorView.shapeEditor.selectedShape,
+                shapeEditorView.shapeEditor.currentShapeStyle
+            )
         initShapeEditorController(shapeEditorView, shapeInfoButton)
+        initTable(shapeInfoButton)
         initClearButton()
 
         val shapesButton = initShapeButton()
@@ -45,11 +60,112 @@ class MainActivity : AppCompatActivity() {
         initStrokeColorPickerButton()
     }
 
+    private fun initTable(
+        shapeInfoBtn: ImageButton,
+    ): ShapeTable {
+        layout = findViewById(R.id.main_layout)
+        val tableScrollView = findViewById<ScrollView>(R.id.table_wrapper)
+        val listener = ShapeTableListenerImpl(shapeEditorController, table)
+        table.init(listener)
+        shapeEditorController.addEventHandler(
+            EditorEvent.DrawNewShape,
+            object : DrawNewShapeEventHandler {
+                override fun onAddNewShape(shape: Shape) {
+                    var x1 = 0F
+                    var y1 = 0F
+                    var x2 = 0F
+                    var y2 = 0F
+                    when (shape) {
+                        is Circle -> {
+                            x1 = shape.centerX
+                            y1 = shape.centerY
+                            x2 = shape.centerY + shape.radius
+                            y2 = shape.centerY + shape.radius
+                        }
+                        is Cube -> {
+                            x1 = shape.x1
+                            y1 = shape.y1
+                            x2 = shape.x2
+                            y2 = shape.y2
+                        }
+                        is Ellipse -> {
+                            x1 = shape.x
+                            y1 = shape.y
+                            x2 = shape.x + shape.width
+                            y2 = shape.x + shape.height
+                        }
+                        is Line -> {
+                            x1 = shape.startX
+                            y1 = shape.startY
+                            x2 = shape.endX
+                            y2 = shape.endY
+                        }
+                        is LineWithDoubleCircle -> {
+                            x1 = shape.startX
+                            y1 = shape.startY
+                            x2 = shape.endX
+                            y2 = shape.endY
+                        }
+                        is Point -> {
+                            x1 = shape.x
+                            y1 = shape.y
+                            x2 = shape.x
+                            y2 = shape.y
+                        }
+                        is Rectangle -> {
+                            x1 = shape.x
+                            y1 = shape.y
+                            x2 = shape.x + shape.width
+                            y2 = shape.x + shape.height
+                        }
+                    }
+                    val id = shape.hashCode().toString()
+                    val shapeType = when (shape) {
+                        is Circle -> "Коло"
+                        is Cube -> "Куб"
+                        is Ellipse -> "Еліпс"
+                        is Line -> "Лінія"
+                        is LineWithDoubleCircle -> "Лінія з двома колами"
+                        is Point -> "Точка"
+                        is Rectangle -> "Прямокутник"
+                        else -> throw RuntimeException("${shape::javaClass}: Does not exist value for this shape class")
+                    }
+                    table.addShapeRow(id, shapeType, x1.toInt(), y1.toInt(), x2.toInt(), y2.toInt())
+                }
+            })
+
+        shapeEditorController.addEventHandler(
+            EditorEvent.RemoveShape,
+            object : RemoveShapeEventHandler {
+                override fun onRemoveShape(shape: Shape) {
+                    table.removeShapeRow(shape.hashCode().toString())
+                }
+            })
+
+        shapeEditorController.addEventHandler(EditorEvent.ClearShapes,
+            object : ClearShapesEventHandler {
+                override fun onClearShapes() {
+                    table.clearShapes()
+                }
+
+            })
+
+        shapeInfoBtn.setOnClickListener {
+            if (isTableVisible) {
+                tableScrollView.visibility = View.GONE
+            } else {
+                tableScrollView.visibility = View.VISIBLE
+            }
+            isTableVisible = !isTableVisible
+        }
+        return table
+    }
+
     private fun initShapeEditorController(
         shapeEditorView: ShapeEditorView,
-        shapeInfoButtonView: ShapeInfoButtonView
+        shapeInfoButtonView: ShapeInfoButtonView,
     ) {
-        shapeEditorController = ShapeEditorController(shapeEditorView, shapeInfoButtonView)
+        shapeEditorController = ShapeEditorController(shapeEditorView, shapeInfoButtonView, table)
     }
 
     private fun initShapeInfoButton(selectedShape: SelectedShape, shapeStyle: Style) =
@@ -59,10 +175,10 @@ class MainActivity : AppCompatActivity() {
             style = shapeStyle
         }
 
-
     private fun initStrokeColorPickerDialog() {
         val colorSelectionListener = ColorPickerDialogFragment.ColorSelectionListener {
             shapeEditorController.setStrokeColor(it)
+
         }
 
         val strokelessCheckboxListener: (CompoundButton, Boolean) -> Unit = { btn, isChecked ->
@@ -88,6 +204,14 @@ class MainActivity : AppCompatActivity() {
             "Заповнення і обводку не можна виключити одночасно ",
             Toast.LENGTH_LONG
         ).show()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.miSave -> shapeEditorController.saveShapesToStorage()
+            R.id.miStorage -> shapeEditorController.setShapesFromStorage()
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     private fun initFillColorPickerDialog() {
